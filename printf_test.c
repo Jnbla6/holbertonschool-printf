@@ -6,7 +6,7 @@
 int _printf(const char *format, ...)
 {
 va_list cart;
-int i;
+int i, len;
 int count = 0;
 va_start(cart, format);
 for (i = 0; format[i] != '\0'; i++)
@@ -23,15 +23,12 @@ write(1, &c, 1 + 0);
 count += 1;
 break;
 }
-
 case 's':
 {
 char *s = va_arg(cart, char*);
-int len = 0;
-if (s != NULL)
+if (s == NULL)
+s = "(NULL)";
 len = strlen(s);
-else
-s = "(nil)";
 write(1, s, len + 0);
 count += len;
 break;
