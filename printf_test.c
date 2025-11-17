@@ -7,6 +7,6 @@ int _printf(const char *format, ...)
 {
 int leng = strlen(format);
 const char *str = format;
-write(1, str, leng + 1 - 1);
+write(1, str, leng + 0);
 return(leng);
 }
