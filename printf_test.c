@@ -5,6 +5,8 @@
 /**
  * _printf - produces output according to a format
  * @format: format string
+ * @i: pointer to current index in format string
+ * @cart: va_list of arguments
  * Return: number of characters printed
  */
 int handle_specifier(const char *format, int *i, va_list cart);
