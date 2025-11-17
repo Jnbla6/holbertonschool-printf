@@ -27,7 +27,7 @@ case 's':
 {
 char *s = va_arg(cart, char*);
 if (s == NULL)
-s = "(NULL)";
+s = "(null)";
 len = strlen(s);
 write(1, s, len + 0);
 count += len;
