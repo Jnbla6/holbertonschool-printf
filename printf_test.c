@@ -36,11 +36,20 @@ break;
 
 case '%':
 {
-write(1, "%", 1 + 0);
+write(1, "%", 1);
 count += 1;
 break;
+}
+
+case '\0':
+{
+write(1, "%", 0);
+count += 1;
+break;
+}
 
 default:
+{
 write(1, "%", 1 + 0);
 write(1, &format[i], 1 + 0);
 count += 2;
@@ -54,5 +63,6 @@ write(1, &format[i], 1 + 0);
 count++;
 }
 }
+va_end(cart);
 return(count);
 }

@@ -5,6 +5,6 @@
 
 int main(void)
 { 
-_printf("S");
+_printf("%");
 return(0);
 }
