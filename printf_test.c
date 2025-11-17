@@ -14,6 +14,11 @@ for (i = 0; format[i] != '\0'; i++)
 if (format[i] == '%')
 {
 i++;
+if (format[i] == '\0')
+{
+va_end(cart);
+return (0);
+}
 switch (format[i])
 {
 case 'c':
@@ -38,13 +43,6 @@ case '%':
 {
 write(1, "%", 1);
 count += 1;
-break;
-}
-
-case '\0':
-{
-count = 0;
-return(0);
 break;
 }
 
