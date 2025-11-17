@@ -43,8 +43,7 @@ break;
 
 case '\0':
 {
-count = 0;
-return(count);
+count = -1;
 break;
 }
 
