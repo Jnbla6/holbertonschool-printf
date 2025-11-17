@@ -10,6 +10,8 @@ int _printf(const char *format, ...)
 va_list cart;
 int i, count = 0;
 
+if (!format || (format[0] == '%' && format[1] == '\0'))
+return (-1);
 va_start(cart, format);
 for (i = 0; format[i]; i++)
 {
