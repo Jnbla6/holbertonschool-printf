@@ -37,7 +37,7 @@ break;
 case '%':
 {
 write(1, "%", 1);
-count += 1;
+count = 0;
 break;
 }
 
