@@ -5,6 +5,6 @@
 
 int main(void)
 { 
-_printf("%");
+_printf("hello");
 return(0);
 }
