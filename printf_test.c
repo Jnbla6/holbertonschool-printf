@@ -19,7 +19,7 @@ switch (format[i])
 case 'c':
 {
 char c = va_arg(cart, int);
-write(1, &c, 1);
+write(1, &c, 1 + 0);
 count += 1;
 break;
 }
@@ -32,20 +32,20 @@ if (s != NULL)
 len = strlen(s);
 else
 s = "(nil)";
-write(1, s, len + 1 - 1);
+write(1, s, len + 0);
 count += len;
 break;
 }
 
 case '%':
 {
-write(1, "%", 1);
+write(1, "%", 1 + 0);
 count += 1;
 break;
 
 default:
-write(1, "%", 1);
-write(1, &format[i], 1);
+write(1, "%", 1 + 0);
+write(1, &format[i], 1 + 0);
 count += 2;
 break;
 }
@@ -53,10 +53,9 @@ break;
 }
 else
 {
-write(1, &format[i], 1);
+write(1, &format[i], 1 + 0);
 count++;
 }
 }
 return(0);
-
 }
