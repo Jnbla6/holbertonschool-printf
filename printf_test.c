@@ -2,52 +2,19 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
-/**
- * _printf - produces output
- * @format: format string
- * Return: chars printed
- */
+
+int handle_specifier(const char *format, int *i, va_list cart);
+
 int _printf(const char *format, ...)
 {
 va_list cart;
-int i, len, count = 0;
-char *s;
+int i, count = 0;
 
 va_start(cart, format);
-for (i = 0; format[i] != '\0'; i++)
+for (i = 0; format[i]; i++)
 {
 if (format[i] == '%')
-{
-i++;
-if (format[i] == '\0')
-return (-1);
-if (format[i] == 'c')
-{
-char c = va_arg(cart, int);
-write(1, &c, 1);
-count++;
-}
-else if (format[i] == 's')
-{
-s = va_arg(cart, char *);
-if (s == NULL)
-s = "(null)";
-len = strlen(s);
-write(1, s, len);
-count += len;
-}
-else if (format[i] == '%')
-{
-write(1, "%", 1);
-count++;
-}
-else
-{
-write(1, "%", 1);
-write(1, &format[i], 1);
-count += 2;
-}
-}
+count += handle_specifier(format, &i, cart);
 else
 {
 write(1, &format[i], 1);
@@ -58,12 +25,28 @@ va_end(cart);
 return (count);
 }
 
-int print_string(char *s)
+
+int handle_specifier(const char *format, int *i, va_list cart)
 {
-int len;
-if (s == NULL)
-s = "(null)";
-len = strlen(s);
-write(1, s, len);
-return (len);
+char c;
+
+(*i)++;
+if (!format[*i])
+return (-1);
+if (format[*i] == 'c')
+{
+c = va_arg(cart, int);
+write(1, &c, 1);
+return (1);
+}
+if (format[*i] == 's')
+return (print_string(va_arg(cart, char *)));
+if (format[*i] == '%')
+{
+write(1, "%", 1);
+return (1);
+}
+write(1, "%", 1);
+write(1, &format[*i], 1);
+return (2);
 }
