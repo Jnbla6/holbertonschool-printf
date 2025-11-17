@@ -8,5 +8,5 @@ int _printf(const char *format, ...)
 int leng = strlen(format);
 const char *str = format;
 write(1, str, leng);
-return(0);
+return(leng);
 }
