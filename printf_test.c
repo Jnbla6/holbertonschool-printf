@@ -17,7 +17,7 @@ i++;
 if (format[i] == '\0')
 {
 va_end(cart);
-return (0);
+return (-1);
 }
 switch (format[i])
 {
