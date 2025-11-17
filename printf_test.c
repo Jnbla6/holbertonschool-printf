@@ -32,7 +32,7 @@ if (s != NULL)
 len = strlen(s);
 else
 s = "(nil)";
-write(1, s, len);
+write(1, s, len + 0);
 count += len;
 break;
 }
