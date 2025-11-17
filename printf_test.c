@@ -37,14 +37,14 @@ break;
 case '%':
 {
 write(1, "%", 1);
-count = 0;
+count += 1;
 break;
 }
 
 case '\0':
 {
 write(1, "%", 0);
-count += 1;
+count = 0;
 break;
 }
 
