@@ -5,8 +5,8 @@
 
 int _printf(const char *format, ...)
 {
-int leng = strlen(format);
+int leng = strlen(format) + 1;
 const char *str = format;
-write(1, str, leng + 1);
+write(1, str, leng);
 return(leng);
 }
