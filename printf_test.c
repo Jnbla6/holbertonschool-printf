@@ -57,5 +57,5 @@ write(1, &format[i], 1 + 0);
 count++;
 }
 }
-return(0);
+return(count);
 }
