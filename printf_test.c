@@ -2,7 +2,11 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
-
+/**
+ * _printf - produces output according to a format
+ * @format: format string
+ * Return: number of characters printed
+ */
 int handle_specifier(const char *format, int *i, va_list cart);
 
 int _printf(const char *format, ...)
@@ -26,7 +30,13 @@ count++;
 va_end(cart);
 return (count);
 }
-
+/**
+ * handle_specifier - handles format specifiers
+ * @format: format string
+ * @i: pointer to current index in format string
+ * @cart: va_list of arguments
+ * Return: number of characters printed for the specifier
+ */
 
 int handle_specifier(const char *format, int *i, va_list cart)
 {
