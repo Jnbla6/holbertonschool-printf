@@ -25,18 +25,18 @@ int _printf(const char *format, ...)
             else if (format[i] == 's')
                 count += print_string(args);
             else if (format[i] == '%')
-                count += print_percent();
+                count += print_percent(args);  /* تم التصحيح هنا */
             else if (format[i] == 'd' || format[i] == 'i')
                 count += print_int(args);
             else
             {
-                count += write(1, "%", 1);
-                count += write(1, &format[i], 1);
+                count += _putchar('%');
+                count += _putchar(format[i]);
             }
         }
         else
         {
-            count += write(1, &format[i], 1);
+            count += _putchar(format[i]);
         }
         i++;
     }
