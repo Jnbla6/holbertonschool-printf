@@ -15,7 +15,6 @@ int print_int(va_list args);
 int print_percent(va_list args);
 int print_number(long n);
 int handle_specifier(const char *format, int *i, va_list cart);
-int print_char(char c);
 int print_string(char *s);
 int print_int(va_list args, char buffer[], int *buff_ind);
 int print_int_recursive(unsigned int num, char buffer[], int *buff_ind);
