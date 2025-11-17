@@ -4,8 +4,9 @@
 #include "main.h"
 
 int _printf(const char *format, ...)
-{ 
+{
+int leng = strlen(format);
 const char *str = format;
-write(1, str, 5);
-return (0);
+write(1, str, leng);
+return(0);
 }
