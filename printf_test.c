@@ -45,7 +45,7 @@ case '\0':
 {
 count = 0;
 break;
-break;
+return(count);
 }
 
 default:
