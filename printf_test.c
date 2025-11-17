@@ -43,7 +43,6 @@ break;
 
 case '\0':
 {
-write(1, "%", 0);
 count = 0;
 break;
 }
