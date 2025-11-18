@@ -2,18 +2,21 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
+
 /**
  * print_char - writes the character c to stdout
- * @c: The character to print
+ * @args: va_list containing the character to print
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int print_char(char c)
+int print_char(va_list args)
 {
-write(1, &c, 1);
-return (1);
+    char c = va_arg(args, int);  /* Extract char from va_list */
+    write(1, &c, 1);
+    return (1);
 }
+
 /**
  * _printf - Custom printf function
  * @format: Format string
@@ -39,7 +42,7 @@ int _printf(const char *format, ...)
             else if (format[i] == 's')
                 count += print_string(args);
             else if (format[i] == '%')
-                count += print_percent(args);  /* تم التصحيح هنا */
+                count += print_percent(args);
             else if (format[i] == 'd' || format[i] == 'i')
                 count += print_int(args);
             else
