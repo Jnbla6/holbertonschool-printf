@@ -12,7 +12,7 @@ int _putchar(char c)
 
 /**
  * print_string - prints a string
- * @args: variadic list
+ * @s: variadic list
  * Return: number of characters printed
  */
 int print_string(char *s)
@@ -58,34 +58,4 @@ int print_int(va_list args)
 {
     long n = va_arg(args, int);
     return (print_number(n));
-}
-
-
-int handle_specifier(const char *format, int *i, va_list args)
-{
-char c;
-
-(*i)++;
-if (!format[*i])
-return (-1);
-if (format[*i] == 'c')
-{
-c = va_arg(args, int);
-write(1, &c, 1);
-return (1);
-}
-if (format[*i] == 's')
-return (print_string(va_arg(args, char *)));
-if (format[*i] == '%')
-{
-write(1, "%", 1);
-return (1);
-}
-if (format[*i] == 'd' || format[*i] == 'i')
-{
-return (print_int(va_arg(args, char *)));
-}
-write(1, "%", 1);
-write(1, &format[*i], 1);
-return (2);
 }

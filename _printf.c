@@ -11,7 +11,7 @@ int _printf(const char *format, ...)
     int i = 0, count = 0;
     char c;
 
-    if (!format || (format[0] == '%' && format[1] == '\0'))
+    if (!format || (format[0] == '%' && format[1] == '\0')) /* handelh for errors*/
         return (-1);
 
     va_start(args, format);
@@ -20,11 +20,11 @@ int _printf(const char *format, ...)
     {
         if (format[i] == '%')
         {
-            i++;
+            i++; /* to check the type after %*/
             if (format[i] == 'c')
             {
                 c = va_arg(args, int);
-                count += write(1, &c, 1);
+                count += write(1, &c, 1); /* to write the char*/
             }
             else if (format[i] == 's')
                 count += print_string(args);

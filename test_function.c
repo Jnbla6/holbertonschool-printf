@@ -2,6 +2,6 @@
 
 int main(void)
 {
-_printf("%%");
+_printf("f");
 return(0);
 }
