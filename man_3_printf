@@ -1,0 +1,32 @@
+.TH _PRINTF 3 "November 2025" "printf project"
+.SH NAME
+_printf \- custom formatted output conversion
+
+.SH SYNOPSIS
+.B #include "main.h"
+.br
+int _printf(const char *format, ...);
+
+.SH DESCRIPTION
+This function writes output to stdout according to a format string.
+Supported format specifiers:
+.RS
+.TP
+.B %c
+character
+.TP
+.B %s  
+string
+.TP
+.B %%
+percent sign
+.TP
+.B %d, %i
+signed integer
+.RE
+
+.SH RETURN VALUE
+Number of characters printed (excluding null terminator).
+
+.SH AUTHORS
+rama and badr
