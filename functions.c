@@ -65,25 +65,27 @@ int print_int(va_list args)
  * @n: unsigned integer to convert
  * Return: number of characters printed
  */
-int print_binary(unsigned int n)
+    int print_binary(unsigned int n)
 {
-    char buffer[32];
-    int i=0, count =0;
+    int count = 0;
+    char buffer[33];
+    int i = 0;
 
-     if (n == 0)
-        return write(1,"0",1);
+    if (n == 0)
+        return _putchar('0');
 
     while (n > 0)
     {
-        buffer[i++] = (n % 2) + '0';
-        n/= 2;
+        buffer[i] = (n % 2) + '0';
+        n = n / 2;
         i++;
     }
 
-    while (i--);
-    
-        count += write(1,&buffer[i],1);
+    while (i > 0)
+    {
+        count += _putchar(buffer[i - 1]);
         i--;
+    }
 
     return count;
 }
