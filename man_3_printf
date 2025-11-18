@@ -5,28 +5,71 @@ _printf \- custom formatted output conversion
 .SH SYNOPSIS
 .B #include "main.h"
 .br
-int _printf(const char *format, ...);
+.B int _printf(const char *format, ...);
 
 .SH DESCRIPTION
-This function writes output to stdout according to a format string.
+The
+.B _printf()
+function writes output to stdout according to a format string that specifies how subsequent arguments are converted for output.
+
+This is a custom implementation of the standard printf function that supports basic format specifiers. The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream, and conversion specifications, each of which results in fetching zero or more subsequent arguments.
+
 Supported format specifiers:
 .RS
 .TP
 .B %c
-character
+Print a single character
 .TP
-.B %s  
-string
+.B %s
+Print a string of characters
 .TP
 .B %%
-percent sign
+Print a literal percent sign
 .TP
 .B %d, %i
-signed integer
+Print a signed decimal integer
 .RE
 
+.PP
+If a NULL pointer is passed for %s conversion, the string "(null)" is printed.
+
 .SH RETURN VALUE
-Number of characters printed (excluding null terminator).
+Upon successful return, the
+.B _printf()
+function returns the number of characters printed (excluding the null byte used to end output to strings).
+
+If an output error occurs or if format is NULL, a negative number is returned.
+
+.SH EXAMPLES
+The following program:
+.RS
+.nf
+#include "main.h"
+
+int main(void)
+{
+    _printf("Hello, %s!\\n", "world");
+    _printf("Character: %c\\n", 'A');
+    _printf("Number: %d\\n", 42);
+    return (0);
+}
+.fi
+.RE
+.PP
+produces output:
+.RS
+.nf
+Hello, world!
+Character: A
+Number: 42
+.fi
+.RE
+
+.SH BUGS
+This implementation does not support flags, field width, precision, or length modifiers. Floating point conversions and other specifiers like %x, %o, %u are not supported.
+
+.SH SEE ALSO
+.BR printf (3)
 
 .SH AUTHORS
 rama and badr
