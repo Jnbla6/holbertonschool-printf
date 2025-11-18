@@ -58,4 +58,33 @@ int print_int(va_list args)
 {
     long n = va_arg(args, int);
     return (print_number(n));
+} 
+/**
+ * print_binary - converts unsigned int to binary and prints it
+ * @n: unsigned integer to convert
+ * Return: number of characters printed
+ */
+int print_binary(unsigned int n)
+{
+    int count = 0;
+    char buffer[33];
+    int i = 0;
+
+    if (n == 0)
+        return _putchar('0');
+
+    while (n > 0)
+    {
+        buffer[i] = (n % 2) + '0';
+        n = n / 2;
+        i++;
+    }
+
+    while (i > 0)
+    {
+        count += _putchar(buffer[i - 1]);
+        i--;
+    }
+
+    return count;
 }
