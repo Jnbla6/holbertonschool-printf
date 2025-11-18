@@ -30,8 +30,7 @@ int _printf(const char *format, ...)
                 count += print_string(va_arg(args, char*));
             else if (format[i] == '%')
                 {
-                write(1, "%", 1);
-                return (1);
+                count += write(1, "%", 1);
                 }
 
             else if (format[i] == 'd' || format[i] == 'i')
