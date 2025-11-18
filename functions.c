@@ -42,12 +42,10 @@ int print_string(va_list args)
 
 /**
  * print_percent - prints %
- * @args: variadic list (unused)
  * Return: 1
  */
-int print_percent(va_list args)
+int print_percent(void)
 {
-    (void)args;  /* Mark parameter as unused */
     return (_putchar('%'));
 }
 
