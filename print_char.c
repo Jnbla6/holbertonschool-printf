@@ -4,20 +4,6 @@
 #include <string.h>
 
 /**
- * print_char - writes the character c to stdout
- * @args: va_list containing the character to print
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
- */
-int print_char(va_list args)
-{
-    char c = va_arg(args, int);  /* Extract char from va_list */
-    write(1, &c, 1);
-    return (1);
-}
-
-/**
  * _printf - Custom printf function
  * @format: Format string
  * Return: Number of characters printed
