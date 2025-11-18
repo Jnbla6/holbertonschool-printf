@@ -9,23 +9,31 @@ int _printf(const char *format, ...)
 {
     va_list args;
     int i = 0, count = 0;
+    char c;
 
-    if (format == NULL)
+    if (!format || (format[0] == '%' && format[1] == '\0')) /* handelh for errors*/
         return (-1);
 
     va_start(args, format);
 
-    while (format[i])
+    for (i = 0; format[i]; i++)
     {
         if (format[i] == '%')
         {
-            i++;
+            i++; /* to check the type after %*/
             if (format[i] == 'c')
-                count += print_char(args);
+            {
+                c = va_arg(args, int);
+                count += write(1, &c, 1); /* to write the char*/
+            }
             else if (format[i] == 's')
                 count += print_string(args);
             else if (format[i] == '%')
-                count += print_percent();
+                {
+                write(1, "%", 1);
+                return (1);
+                }
+
             else if (format[i] == 'd' || format[i] == 'i')
                 count += print_int(args);
 	    else if (format[i] == 'b')
@@ -40,7 +48,6 @@ int _printf(const char *format, ...)
         {
             count += write(1, &format[i], 1);
         }
-        i++;
     }
 
     va_end(args);
