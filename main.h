@@ -5,7 +5,9 @@
 #include <unistd.h>
 #include <string.h>
 
+#define BUFFER_SIZE 1024
 int _printf(const char *format, ...);
+
 
 /* Print functions */
 int print_string(char *s);
