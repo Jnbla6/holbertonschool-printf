@@ -11,6 +11,7 @@ int _printf(const char *format, ...);
 int print_string(char *s);
 int print_int(va_list args);
 int print_binary(unsigned int n);
+int print_int(int in);
 /* Helpers */
 int _putchar(char c);
 int print_number(long n);
