@@ -1,7 +1,4 @@
 #include "main.h"
-#include <stdarg.h>
-#include <unistd.h>
-#include <string.h>
 
 /**
  * _printf - Custom printf function
@@ -28,18 +25,18 @@ int _printf(const char *format, ...)
             else if (format[i] == 's')
                 count += print_string(args);
             else if (format[i] == '%')
-                count += print_percent(args);
+                count += print_percent();
             else if (format[i] == 'd' || format[i] == 'i')
                 count += print_int(args);
             else
             {
-                count += _putchar('%');
-                count += _putchar(format[i]);
+                count += write(1, "%", 1);
+                count += write(1, &format[i], 1);
             }
         }
         else
         {
-            count += _putchar(format[i]);
+            count += write(1, &format[i], 1);
         }
         i++;
     }
