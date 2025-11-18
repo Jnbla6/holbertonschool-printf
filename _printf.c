@@ -59,7 +59,10 @@ if (format[*i] == '%')
 {
 write(1, "%", 1);
 return (1);
-}
+} 
+if (format[*i] == 'b') 
+        return (print_binary(va_arg(cart, unsigned int)));
+
 write(1, "%", 1);
 write(1, &format[*i], 1);
 return (2);
