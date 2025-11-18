@@ -11,42 +11,19 @@ int _putchar(char c)
 }
 
 /**
- * print_char - prints a character
- * @args: variadic list
- * Return: number of characters printed
- */
-int print_char(va_list args)
-{
-    char c = va_arg(args, int);
-    return (_putchar(c));
-}
-
-/**
  * print_string - prints a string
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_string(va_list args)
+int print_string(char *s)
 {
-    char *str = va_arg(args, char *);
-    int i = 0;
+int len;
 
-    if (str == NULL)
-        str = "(null)";
-
-    while (str[i])
-        _putchar(str[i++]);
-
-    return (i);
-}
-
-/**
- * print_percent - prints %
- * Return: 1
- */
-int print_percent(void)
-{
-    return (_putchar('%'));
+if (!s)
+s = "(null)";
+len = strlen(s);
+write(1, s, len);
+return (len);
 }
 
 /**
@@ -83,49 +60,32 @@ int print_int(va_list args)
     return (print_number(n));
 }
 
-/**
- * _printf - Custom printf function
- * @format: Format string
- * Return: Number of characters printed
- */
-int _printf(const char *format, ...)
+
+int handle_specifier(const char *format, int *i, va_list args)
 {
-    va_list args;
-    int i = 0, count = 0;
+char c;
 
-    if (format == NULL)
-        return (-1);
-
-    va_start(args, format);
-
-    while (format[i])
-    {
-        if (format[i] == '%')
-        {
-            i++;
-            if (format[i] == 'c')
-                count += print_char(args);
-            else if (format[i] == 's')
-                count += print_string(args);
-            else if (format[i] == '%')
-                count += print_percent();
-            else if (format[i] == 'd' || format[i] == 'i')
-                count += print_int(args);
-            else if (format[i] == 'b')  // ADD THIS FOR BINARY
-                count += print_binary(args);
-            else
-            {
-                count += _putchar('%');
-                count += _putchar(format[i]);
-            }
-        }
-        else
-        {
-            count += _putchar(format[i]);
-        }
-        i++;
-    }
-
-    va_end(args);
-    return (count);
+(*i)++;
+if (!format[*i])
+return (-1);
+if (format[*i] == 'c')
+{
+c = va_arg(args, int);
+write(1, &c, 1);
+return (1);
+}
+if (format[*i] == 's')
+return (print_string(va_arg(args, char *)));
+if (format[*i] == '%')
+{
+write(1, "%", 1);
+return (1);
+}
+if (format[*i] == 'd' || format[*i] == 'i')
+{
+return (print_int(va_arg(args, char *)));
+}
+write(1, "%", 1);
+write(1, &format[*i], 1);
+return (2);
 }
