@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
+
 /**
  * _printf - produces output according to a format
  * @format: format string
@@ -42,24 +43,17 @@ return (count);
 
 int handle_specifier(const char *format, int *i, va_list cart)
 {
-char c;
-
 (*i)++;
 if (!format[*i])
 return (-1);
 if (format[*i] == 'c')
-{
-c = va_arg(cart, int);
-write(1, &c, 1);
-return (1);
-}
+return (print_char(cart));
 if (format[*i] == 's')
-return (print_string(va_arg(cart, char *)));
+return (print_string(cart));
 if (format[*i] == '%')
-{
-write(1, "%", 1);
-return (1);
-}
+return (print_percent(cart));
+if (format[*i] == 'd' || format[*i] == 'i')
+return (print_int(cart));
 write(1, "%", 1);
 write(1, &format[*i], 1);
 return (2);
