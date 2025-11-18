@@ -13,7 +13,7 @@ The
 function writes output to stdout according to a format string that specifies how subsequent arguments are converted for output.
 
 This is a custom implementation of the standard printf function that supports basic format specifiers. The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream, and conversion specifications, each of which results in fetching zero or more subsequent arguments.
-
+ authors : rama and bader
 Supported format specifiers:
 .RS
 .TP
