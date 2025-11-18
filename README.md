@@ -67,7 +67,7 @@ The function processes the format string and handles the following conversion sp
 | `man_3_printf` | Custom manual page documenting the function's usage, synopsis, and examples. |
 
 ## 👥 Authors
-  * **Bader**
+  * **Badr**
   * **Rama**
 
 -----
