@@ -1,62 +1,6 @@
 #include "main.h"
 
 /**
- * _printf - Custom printf function
- * @format: Format string
- * Return: Number of characters printed
- */
-int _printf(const char *format, ...)
-{
-    va_list args;
-    int i = 0, count = 0;
-    char c;
-
-    if (!format || (format[0] == '%' && format[1] == '\0')) /* handelh for errors*/
-        return (-1);
-
-    va_start(args, format);
-
-    for (i = 0; format[i]; i++)
-    {
-        if (format[i] == '%')
-        {
-            i++; /* to check the type after %*/
-            if (format[i] == 'c')
-            {
-                c = va_arg(args, int);
-                count += write(1, &c, 1); /* to write the char*/
-            }
-            else if (format[i] == 's')
-                count += print_string(va_arg(args, char*));
-            else if (format[i] == '%')
-                {
-                count += write(1, "%", 1);
-                }
-
-            else if (format[i] == 'd' || format[i] == 'i')
-                count += print_int(args);
-            else if (format[i] == 'b'|| format[i] == 'i' ) /* this line for binary*/
-		  count += print_binary(va_arg(args, unsigned int));
-	    else if (format[i] == 'b')
-		   count += print_binary(va_arg(args, unsigned int));
-            {
-                count += write(1, "%", 1);
-                count += write(1, &format[i], 1);
-            }
-        }
-        else
-        {
-            count += write(1, &format[i], 1);
-        }
-    }
-
-    va_end(args);
-    return (count);
-}
-
-#include "main.h"
-
-/**
  * _printf - Custom printf implementation
  * @format: Format string
  * Return: Number of characters printed
