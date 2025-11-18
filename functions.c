@@ -54,10 +54,10 @@ int print_number(long n)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_int(va_list args)
+
+int print_int(int n)
 {
-    long n = va_arg(args, int);
-    return (print_number(n));
+    return (print_number((long)n));
 } 
 /**
  * print_binary - converts unsigned int to binary and prints it
