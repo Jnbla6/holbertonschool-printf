@@ -1,74 +1,91 @@
-#include <stdarg.h>
 #include "main.h"
 
-/* Print a single char */
-int print_char(va_list args)
+/**
+ * _putchar - writes a character
+ * @c: the character
+ * Return: number of bytes written
+ */
+int _putchar(char c)
 {
-    char c = (char)va_arg(args, int);
-    return _putchar(c);
+    return (write(1, &c, 1));
 }
 
-/* Print a string */
-int print_string(va_list args)
+/**
+ * print_string - prints a string
+ * @s: variadic list
+ * Return: number of characters printed
+ */
+int print_string(char *s)
 {
-    char *s = va_arg(args, char *);
+int len;
+
+if (!s)
+s = "(null)";
+len = strlen(s);
+write(1, s, len);
+return (len);
+}
+
+/**
+ * print_number - recursive function to print numbers
+ * @n: long number
+ * Return: count of characters
+ */
+int print_number(long n)
+{
     int count = 0;
 
-    if (!s)
-        s = "(null)";
-
-    while (*s)
-    {
-        count += _putchar(*s);
-        s++;
-    }
-    return count;
-}
-
-/* Print percent sign */
-int print_percent(va_list args)
-{
-    (void)args;
-    return _putchar('%');
-}
-
-/* Print number */
-int print_number(va_list args)
-{
-    int n = va_arg(args, int);
     if (n < 0)
     {
-        _putchar('-');
-        return print_number_base((unsigned int)(-n), 10, 0) + 1;
+        count += _putchar('-');
+        n = -n;
     }
-    return print_number_base((unsigned int)n, 10, 0);
+
+    if (n / 10)
+        count += print_number(n / 10);
+
+    count += _putchar((n % 10) + '0');
+
+    return (count);
 }
 
-/* Print unsigned number with base */
-int print_unsigned(va_list args, int base, int uppercase)
+/**
+ * print_int - prints integers %d %i
+ * @args: variadic list
+ * Return: number of characters printed
+ */
+int print_int(va_list args)
 {
-    unsigned int n = va_arg(args, unsigned int);
-    return print_number_base(n, base, uppercase);
+    long n = va_arg(args, int);
+    return (print_number(n));
 }
-
-/* Helper to print numbers in any base */
-int print_number_base(unsigned long n, int base, int uppercase)
+ 
+/**
+ * print_binary - converts unsigned int to binary and prints it
+ * @n: unsigned integer to convert
+ * Return: number of characters printed
+ */
+    int print_binary(unsigned int n)
 {
-    char buffer[50];
-    char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
-    int i = 0, count = 0;
+    int count = 0;
+    char buffer[33];
+    int i = 0;
 
     if (n == 0)
         return _putchar('0');
 
     while (n > 0)
     {
-        buffer[i++] = digits[n % base];
-        n /= base;
+        buffer[i] = (n % 2) + '0';
+        n = n / 2;
+        i++;
     }
 
-    while (--i >= 0)
-        count += _putchar(buffer[i]);
+    while (i > 0)
+    {
+        count += _putchar(buffer[i - 1]);
+        i--;
+    }
 
     return count;
 }
