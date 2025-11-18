@@ -1,102 +1,66 @@
-#include <stdarg.h>
 #include "main.h"
+#include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
+/**
+ * _printf - produces output according to a format
+ * @format: format string
+ * @i: pointer to current index in format string
+ * @cart: va_list of arguments
+ * Return: number of characters printed
+ */
+int handle_specifier(const char *format, int *i, va_list cart);
 
 int _printf(const char *format, ...)
 {
-    va_list args;
-    int count = 0;
+va_list cart;
+int i, count = 0;
 
-    if (!format)
-        return (-1);
-
-    va_start(args, format);
-
-    while (*format)
-    {
-        if (*format == '%')
-        {
-            format++;
-            if (*format == '\0')
-                break;
-            count += handle_conversion(&format, args);
-        }
-        else
-        {
-            count += _putchar(*format);
-        }
-        format++;
-    }
-
-    va_end(args);
-    return count;
-}
-
-int handle_conversion(const char **format, va_list args)
+if (!format || (format[0] == '%' && format[1] == '\0'))
+return (-1);
+va_start(cart, format);
+for (i = 0; format[i]; i++)
 {
-    if (**format == 'l')
-        return handle_long(format, args);
-
-    if (**format == 'h')
-        return handle_short(format, args);
-
-    switch (**format)
-    {
-        case 'c':
-            return print_char(args);
-        case 's':
-            return print_string(args);
-        case '%':
-            return print_percent(args);
-        case 'd':
-        case 'i':
-            return print_number(args);
-        default:
-            return _putchar('%') + _putchar(**format);
-    }
-}
-
-int handle_long(const char **format, va_list args)
+if (format[i] == '%')
+count += handle_specifier(format, &i, cart);
+else
 {
-    long num;
-    unsigned long unum;
-
-    (*format)++; /* Skip 'l' */
-
-    switch (**format)
-    {
-        case 'd':
-        case 'i':
-            num = va_arg(args, long);
-            if (num < 0)
-            {
-                _putchar('-');
-                return print_number_base((unsigned long)(-num), 10, 0) + 1;
-            }
-            return print_number_base((unsigned long)num, 10, 0);
-        default:
-            return _putchar('l') + _putchar(**format);
-    }
+write(1, &format[i], 1);
+count++;
 }
+}
+va_end(cart);
+return (count);
+}
+/**
+ * handle_specifier - handles format specifiers
+ * @format: format string
+ * @i: pointer to current index in format string
+ * @cart: va_list of arguments
+ * Return: number of characters printed for the specifier
+ */
 
-int handle_short(const char **format, va_list args)
+int handle_specifier(const char *format, int *i, va_list cart)
 {
-    int num;
-    unsigned int unum;
+char c;
 
-    (*format)++; /* Skip 'h' */
-
-    switch (**format)
-    {
-        case 'd':
-        case 'i':
-            num = va_arg(args, int);
-            if ((short)num < 0)
-            {
-                _putchar('-');
-                return print_number_base((unsigned short)(-(short)num), 10, 0) + 1;
-            }
-            return print_number_base((unsigned short)num, 10, 0);
-        default:
-            return _putchar('h') + _putchar(**format);
-    }
+(*i)++;
+if (!format[*i])
+return (-1);
+if (format[*i] == 'c')
+{
+c = va_arg(cart, int);
+write(1, &c, 1);
+return (1);
+}
+if (format[*i] == 's')
+return (print_string(va_arg(cart, char *)));
+if (format[*i] == '%')
+{
+write(1, "%", 1);
+return (1);
+}
+write(1, "%", 1);
+write(1, &format[*i], 1);
+return (2);
 }
