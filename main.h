@@ -9,7 +9,7 @@ int _printf(const char *format, ...);
 
 /* Print functions */
 int print_string(char *s);
-int print_int(int n);
+int print_int(va_list args);
 int print_binary(unsigned int n);
 /* Helpers */
 int _putchar(char c);
