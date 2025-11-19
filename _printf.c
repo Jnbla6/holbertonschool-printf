@@ -11,7 +11,6 @@
  */
 int handle_specifier(const char *format, int *i, va_list cart);
 void flush(void);
-int _get_total_count(void);
 
 int _printf(const char *format, ...)
 {
@@ -28,9 +27,7 @@ for (i = 0; format[i]; i++)
 if (format[i] == '%')
 count += handle_specifier(format, &i, cart);
 else
-{
 count += _putchar(format[i]);
-}
 }
 flush();
 va_end(cart);
@@ -65,6 +62,8 @@ if (format[*i] == '%')
 count_chars += _putchar('%');
 return (count_chars);
 } 
+ if (format[*i] == 'd' || format[*i] == 'i')
+        return (print_int(cart));
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
