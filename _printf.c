@@ -74,6 +74,9 @@ if (format[*i] == 'b')
         return (print_hex(cart, 0));
     if (format[*i] == 'X')
         return (print_hex(cart, 1));
+    if (format[*i] == 'S')
+    return (print_string_escaped(cart));
+{
 
 _putchar('%');
 _putchar(format[*i]);
