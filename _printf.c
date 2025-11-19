@@ -42,7 +42,9 @@ int _printf(const char *format, ...)
  */
 int handle_specifier(const char *format, int *i, va_list cart)
 {
-    char c;
+if (format[*i] == 'p')
+    return (print_pointer(cart));
+    	char c;
 
     (*i)++;
     if (!format[*i])
