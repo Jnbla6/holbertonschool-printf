@@ -10,31 +10,31 @@
  * Return: number of characters printed
  */
 int handle_specifier(const char *format, int *i, va_list cart);
+void _flush_buffer(void);
 
 int _printf(const char *format, ...)
 {
 va_list cart;
 int i, count = 0;
-char *buffer;
 
 if (!format || (format[0] == '%' && format[1] == '\0'))
 return (-1);
 
-buffer = malloc(1024);
-if (buffer == NULL)
-return (-1);
-
 va_start(cart, format);
+
 for (i = 0; format[i]; i++)
 {
 if (format[i] == '%')
 count += handle_specifier(format, &i, cart);
 else
 {
-write(1, &format[i], 1);
+_putchar(format[i]);
 count++;
 }
 }
+
+_flush_buffer();
+
 va_end(cart);
 return (count);
 }
@@ -49,6 +49,7 @@ return (count);
 int handle_specifier(const char *format, int *i, va_list cart)
 {
 char c;
+int count_chars =0;
 
 (*i)++;
 if (!format[*i])
@@ -56,15 +57,15 @@ return (-1);
 if (format[*i] == 'c')
 {
 c = va_arg(cart, int);
-write(1, &c, 1);
-return (1);
+count_chars += _putchar(c);
+return (count_chars);
 }
 if (format[*i] == 's')
 return (print_string(va_arg(cart, char *)));
 if (format[*i] == '%')
 {
-write(1, "%", 1);
-return (1);
+count_chars += _putchar('%');
+return (count_chars);
 } 
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
@@ -77,8 +78,8 @@ if (format[*i] == 'b')
     if (format[*i] == 'X')
         return (print_hex(cart, 1));
 
-write(1, "%", 1);
-write(1, &format[*i], 1);
+_putchar('%');
+_putchar(format[*i]);
 return (2);
 } 
 
