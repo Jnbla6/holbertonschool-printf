@@ -1,6 +1,6 @@
 .TH _PRINTF 3 "November 2025" "printf project"
 .SH NAME
-_printf \- custom formatted output conversion
+_printf - custom formatted output conversion
 
 .SH SYNOPSIS
 .B #include "main.h"
@@ -12,46 +12,227 @@ The
 .B _printf()
 function writes output to stdout according to a format string that specifies how subsequent arguments are converted for output.
 
-This is a custom implementation of the standard printf function that supports basic format specifiers. The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream, and conversion specifications, each of which results in fetching zero or more subsequent arguments.
- authors : rama and bader
-Supported format specifiers:
+This is a custom implementation of the standard printf function that supports basic format specifiers and conversion characters. The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream, and conversion specifications, each of which results in fetching zero or more subsequent arguments.
+
+The conversion specifications are introduced by the character % and are followed by:
 .RS
 .TP
-.B %c
-Print a single character
-.TP
-.B %s
-Print a string of characters
-.TP
-.B %%
-Print a literal percent sign
-.TP
-.B %d, %i
-Print a signed decimal integer
+.B -
+A conversion specifier that determines the type of conversion to be applied
 .RE
 
 .PP
-If a NULL pointer is passed for %s conversion, the string "(null)" is printed.
+The custom implementation uses a local buffer of 1024 characters to optimize write system calls, accumulating output in memory and only calling the write function when the buffer is full or at the end of processing.
+
+.SH ARCHITECTURE OVERVIEW
+The _printf implementation follows a modular architecture with the following components:
+.RS
+.TP
+.B Main _printf Function:
+Handles the main parsing loop, buffer management, and coordination of the entire printing process.
+.TP
+.B Specifier Handler:
+Processes individual conversion specifiers and delegates to appropriate conversion functions.
+.TP
+.B Conversion Functions:
+Specialized functions for each data type conversion (char, string, numbers, etc.).
+.TP
+.B Buffer System:
+Manages the 1024-character buffer for efficient output operations.
+.RE
+
+.SH BUFFER IMPLEMENTATION DETAILS
+The buffer system is a key optimization feature of this implementation:
+.RS
+.TP
+.B Buffer Size:
+Fixed at 1024 characters as specified in the requirements.
+.TP
+.B Buffer Strategy:
+Characters are accumulated in memory until one of the following conditions is met:
+.RS
+
+Buffer reaches 1000 characters (leaving room for large conversions)
+
+A conversion result would exceed remaining buffer space
+
+End of format string is reached
+.RE
+.TP
+.B Flush Mechanism:
+When buffer conditions are met, the entire buffer content is written to stdout in a single system call.
+.TP
+.B Performance Impact:
+This reduces system calls from O(n) to O(n/1024) where n is the number of characters.
+.RE
+
+.SH CONVERSION SPECIFIERS
+The following conversion specifiers are supported with detailed behavior:
+.RS
+.TP
+.B %c
+Prints a single character. The corresponding argument must be of type int. The character is extracted using va_arg with int type and cast to char for printing. Handles all ASCII characters and extended characters within the char range.
+.TP
+.B %s
+Prints a string of characters. The corresponding argument must be a pointer to a character array (char *). If the pointer is NULL, the string "(null)" is printed instead. The entire string is processed and special characters are preserved.
+.TP
+.B %%
+Prints a literal percent sign. No argument is consumed. This is treated as a special case that doesn't interact with the variable arguments list.
+.TP
+.B %d, %i
+Prints a signed decimal integer. The corresponding argument must be of type int. Handles both positive and negative numbers, with proper sign handling for negative values.
+.TP
+.B %b
+Prints an unsigned integer in binary format (base 2). The corresponding argument must be of type unsigned int. Converts the number to its binary representation without any prefixes. Leading zeros are omitted.
+.TP
+.B %u
+Prints an unsigned decimal integer. The corresponding argument must be of type unsigned int. Handles the full range of unsigned integers from 0 to UINT_MAX.
+.TP
+.B %o
+Prints an unsigned integer in octal format (base 8). The corresponding argument must be of type unsigned int. Converts to octal representation without any prefix or leading zeros.
+.TP
+.B %x
+Prints an unsigned integer in hexadecimal format (base 16) using lowercase letters (a-f). The corresponding argument must be of type unsigned int. Uses digits 0-9 and letters a-f for values 10-15.
+.TP
+.B %X
+Prints an unsigned integer in hexadecimal format (base 16) using uppercase letters (A-F). The corresponding argument must be of type unsigned int. Uses digits 0-9 and letters A-F for values 10-15.
+.RE
+
+.SH NUMBER CONVERSION ALGORITHMS
+Each numeric conversion uses specific algorithms:
+.RS
+.TP
+.B Decimal Conversion:
+Uses recursive division by 10 to extract digits from least significant to most significant, then reverses for printing.
+.TP
+.B Binary Conversion:
+Uses division by 2 and stores remainders (0 or 1) in reverse order.
+.TP
+.B Octal Conversion:
+Uses division by 8 to extract octal digits (0-7).
+.TP
+.B Hexadecimal Conversion:
+Uses division by 16 with digit mapping: 0-9 remain digits, 10-15 map to a-f/A-F.
+.RE
+
+.SH ERROR HANDLING
+Comprehensive error handling is implemented:
+.RS
+.TP
+.B Invalid Format Strings:
+Returns -1 for NULL format or lone '%' at end of string.
+.TP
+.B Buffer Overflow Protection:
+Checks buffer capacity before each write operation.
+.TP
+.B Null String Handling:
+Safely handles NULL string pointers by printing "(null)".
+.TP
+.B Type Safety:
+Uses appropriate va_arg types for each conversion specifier.
+.RE
+
+.SH MEMORY MANAGEMENT
+The implementation is designed for minimal memory footprint:
+.RS
+.TP
+.B Stack Allocation:
+Buffer and temporary variables are stack-allocated for fast access.
+.TP
+.B No Dynamic Allocation:
+Avoids malloc/free for predictable memory behavior.
+.TP
+.B Fixed Buffer Size:
+1024-byte buffer provides consistent memory usage.
+.RE
+
+.SH PERFORMANCE CHARACTERISTICS
+.RS
+.TP
+.B Time Complexity:
+O(n) for format string length, but with significantly reduced constant factors due to buffer optimization.
+.TP
+.B Space Complexity:
+O(1) additional space beyond the fixed buffer and local variables.
+.TP
+.B System Call Reduction:
+Dramatically reduces write system calls, which are typically the bottleneck in I/O operations.
+.RE
 
 .SH RETURN VALUE
-Upon successful return, the
+Upon successful completion, the
 .B _printf()
-function returns the number of characters printed (excluding the null byte used to end output to strings).
+function returns the number of characters printed to stdout (excluding the null byte used to end output to strings).
 
-If an output error occurs or if format is NULL, a negative number is returned.
+The return value represents the total characters successfully written, which should match the visual output length. This count includes all characters processed through both direct writes and buffer flushes.
+
+If an error occurs, the function returns -1. Error conditions include:
+.RS
+.TP
+.B -
+format string is NULL
+.TP
+.B -
+format string ends with a lone '%' character (incomplete specification)
+.TP
+.B -
+output error during write operation (system-level I/O failure)
+.TP
+.B -
+memory allocation failure (though current implementation avoids dynamic allocation)
+.RE
 
 .SH EXAMPLES
-The following program:
+The following comprehensive program demonstrates all conversion specifiers:
 .RS
 .nf
 #include "main.h"
+#include <limits.h>
 
 int main(void)
 {
-    _printf("Hello, %s!\\n", "world");
-    _printf("Character: %c\\n", 'A');
-    _printf("Number: %d\\n", 42);
-    return (0);
+/* Basic examples */
+_printf("String: %s\n", "Hello, World!");
+_printf("Character: %c\n", 'X');
+_printf("Percent sign: %%\n");
+
+text
+/* Integer examples */
+_printf("Positive decimal: %d\\n", 42);
+_printf("Negative decimal: %d\\n", -42);
+_printf("Integer: %i\\n", 255);
+
+/* Binary examples */
+_printf("Binary of 0: %b\\n", 0);
+_printf("Binary of 1: %b\\n", 1);
+_printf("Binary of 98: %b\\n", 98);
+_printf("Binary of 255: %b\\n", 255);
+
+/* Unsigned examples */
+_printf("Unsigned zero: %u\\n", 0);
+_printf("Unsigned max: %u\\n", UINT_MAX);
+
+/* Octal examples */
+_printf("Octal of 0: %o\\n", 0);
+_printf("Octal of 8: %o\\n", 8);
+_printf("Octal of 64: %o\\n", 64);
+
+/* Hexadecimal examples */
+_printf("Hex of 0: %x\\n", 0);
+_printf("Hex of 15: %x\\n", 15);
+_printf("Hex of 255: %x\\n", 255);
+_printf("Hex uppercase of 255: %X\\n", 255);
+_printf("Hex of 3735928559: %x\\n", 3735928559U);
+
+/* Edge cases and special handling */
+_printf("Null string: %s\\n", NULL);
+_printf("Multiple specifiers: %c %s %d %u %o %x %X %%\\n", 
+        'A', "test", -123, 456, 789, 255, 255);
+
+/* Buffer stress test */
+_printf("Long string: %s\\n", "This is a very long string that should test the buffer implementation thoroughly by exceeding typical buffer sizes and ensuring proper flush behavior.");
+
+return (0);
 }
 .fi
 .RE
@@ -59,17 +240,163 @@ int main(void)
 produces output:
 .RS
 .nf
-Hello, world!
-Character: A
-Number: 42
+String: Hello, World!
+Character: X
+Percent sign: %
+Positive decimal: 42
+Negative decimal: -42
+Integer: 255
+Binary of 0: 0
+Binary of 1: 1
+Binary of 98: 1100010
+Binary of 255: 11111111
+Unsigned zero: 0
+Unsigned max: 4294967295
+Octal of 0: 0
+Octal of 8: 10
+Octal of 64: 100
+Hex of 0: 0
+Hex of 15: f
+Hex of 255: ff
+Hex uppercase of 255: FF
+Hex of 3735928559: deadbeef
+Null string: (null)
+Multiple specifiers: A test -123 456 1425 ff FF %
+Long string: This is a very long string that should test the buffer implementation thoroughly by exceeding typical buffer sizes and ensuring proper flush behavior.
 .fi
 .RE
 
-.SH BUGS
-This implementation does not support flags, field width, precision, or length modifiers. Floating point conversions and other specifiers like %x, %o, %u are not supported.
+.SH COMPILATION INSTRUCTIONS
+The function can be compiled with various compiler flags:
+.RS
+.nf
+Basic compilation:
+gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c
+
+With debug symbols:
+gcc -g -Wall -Werror -Wextra -pedantic -std=gnu89 *.c
+
+With optimization:
+gcc -O2 -Wall -Werror -Wextra -pedantic -std=gnu89 *.c
+
+For testing:
+gcc -D TEST_PRINTF -Wall -Werror -Wextra -pedantic -std=gnu89 *.c
+.fi
+.RE
+
+.SH TESTING METHODOLOGY
+Comprehensive testing should cover:
+.RS
+.TP
+.B Unit Tests:
+Individual conversion specifiers with various inputs
+.TP
+.B Integration Tests:
+Multiple specifiers in single format strings
+.TP
+.B Edge Cases:
+NULL inputs, maximum values, zero values, negative numbers
+.TP
+.B Buffer Tests:
+Strings longer than 1024 characters to test flush mechanism
+.TP
+.B Memory Tests:
+Valgrind analysis for memory leaks and errors
+.RE
+
+.SH LIMITATIONS AND CONSTRAINTS
+This implementation has the following limitations:
+.RS
+.TP
+.B Formatting Limitations:
+No support for flag characters (+, space, #, 0, -)
+No support for field width specification
+No support for precision specification
+No support for length modifiers (h, l, L)
+.TP
+.B Type Support:
+No support for floating point conversions (f, F, e, E, g, G)
+No support for pointer conversion (%p)
+No support for n conversion (%n)
+No support for wide characters and strings
+.TP
+.B Advanced Features:
+No locale support
+No custom format parsing beyond basic specifiers
+No error recovery for malformed format strings
+.TP
+.B Behavioral Differences:
+May have different performance characteristics than system printf
+Buffer timing may affect output in real-time systems
+.RE
+
+.SH PORTABILITY CONSIDERATIONS
+.RS
+.TP
+.B Standards Compliance:
+Follows C89/C90 standards with GNU89 extensions
+.TP
+.B Platform Assumptions:
+Assumes 32-bit or 64-bit two's complement architecture
+Assumes ASCII or compatible character encoding
+.TP
+.B Dependencies:
+Requires stdarg.h for variable arguments
+Requises unistd.h for write system call
+.RE
+
+.SH BUGS AND KNOWN ISSUES
+While the implementation handles basic conversion specifiers correctly, the following issues may exist:
+.RS
+.TP
+.B -
+Buffer flush timing may cause different output behavior in edge cases
+.TP
+.B -
+Very large numbers near UINT_MAX may have conversion artifacts
+.TP
+.B -
+No protection against format string attacks
+.TP
+.B -
+Limited error reporting for invalid conversions
+.RE
+
+.SH FUTURE ENHANCEMENTS
+Potential improvements for future versions:
+.RS
+.TP
+.B -
+Add floating point support
+.TP
+.B -
+Implement flag characters and field width
+.TP
+.B -
+Add length modifiers for different integer sizes
+.TP
+.B -
+Include locale support
+.TP
+.B -
+Add custom specifier registration
+.TP
+.B -
+Implement precision specification
+.RE
 
 .SH SEE ALSO
-.BR printf (3)
+.BR printf (3),
+.BR write (2),
+.BR stdarg (3),
+.BR unistd.h (0p),
+.BR limits.h (0p)
 
 .SH AUTHORS
-rama and badr
+Developed by rama and badr as part of a custom printf implementation project. This implementation focuses on core functionality with buffer optimization for efficient output handling. The project demonstrates system programming concepts, variable argument handling, and performance optimization techniques in C.
+
+.SH COPYRIGHT
+This manual page and the associated implementation are part of the printf project. Redistribution and use in source and binary forms are permitted under the project guidelines.
+
+.SH HISTORY
+The _printf function was developed as an educational project to understand the internals of standard library functions and system call optimization techniques. The buffer implementation was specifically added to meet performance requirements and reduce system call overhead.
