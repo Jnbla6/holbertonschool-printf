@@ -17,13 +17,13 @@ int _putchar(char c)
  */
 int print_string(char *s)
 {
-int len;
+    int len;
 
-if (!s)
-s = "(null)";
-len = strlen(s);
-write(1, s, len);
-return (len);
+    if (!s)
+        s = "(null)";
+    len = strlen(s);
+    write(1, s, len);
+    return (len);
 }
 
 /**
@@ -59,13 +59,13 @@ int print_int(va_list args)
     long n = va_arg(args, int);
     return (print_number(n));
 }
- 
+
 /**
  * print_binary - converts unsigned int to binary and prints it
  * @n: unsigned integer to convert
  * Return: number of characters printed
  */
-    int print_binary(unsigned int n)
+int print_binary(unsigned int n)
 {
     int count = 0;
     char buffer[33];
@@ -89,6 +89,7 @@ int print_int(va_list args)
 
     return count;
 }
+
 /**
  * print_unsigned - prints unsigned integers
  * @args: variadic list
@@ -215,13 +216,10 @@ int print_string_escaped(va_list args)
 
     for (i = 0; s[i]; i++)
     {
-        /* Check if character is non-printable (0 < ASCII < 32 or >= 127) */
         if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
         {
             count += write(1, "\\x", 2);
-            /* Print first hex digit (upper case) */
             count += write(1, &hex_digits[(unsigned char)s[i] / 16], 1);
-            /* Print second hex digit (upper case) */
             count += write(1, &hex_digits[(unsigned char)s[i] % 16], 1);
         }
         else
