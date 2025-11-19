@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 int _printf(const char *format, ...);
 
@@ -22,6 +23,4 @@ int print_hex_number(unsigned int n, int uppercase);
 int _putchar(char c);
 int print_number(long n);
 
-int _buffer_char(char c, char *buffer, int *buf_index, int *total_count);
-void _flush_buffer(char *buffer, int *buf_index, int *total_count);
 #endif 

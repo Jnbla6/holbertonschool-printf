@@ -5,10 +5,6 @@
  * @c: the character
  * Return: number of bytes written
  */
-int _putchar(char c)
-{
-    return (write(1, &c, 1));
-}
 
 /**
  * print_string - prints a string
