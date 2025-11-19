@@ -57,7 +57,7 @@ if (format[*i] == 's')
 return (print_string(va_arg(cart, char *)));
 if (format[*i] == '%')
 if (format[*i] == 'S')
-    return (print_string_escaped(cart));
+    return (print_string_escaped(cart, buffer, buf_index));
 {
 write(1, "%", 1);
 return (1);
