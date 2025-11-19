@@ -17,7 +17,8 @@ int len;
 
 if (!s)
 s = "(null)";
-len = strlen(s);
+while(s)
+len += _putchar(*s++);
 write(1, s, len);
 return (len);
 }

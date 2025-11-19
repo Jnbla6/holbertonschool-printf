@@ -33,7 +33,7 @@ count++;
 }
 }
 
-_flush_buffer();
+flush();
 
 va_end(cart);
 return (count);

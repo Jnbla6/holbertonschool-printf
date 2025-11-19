@@ -18,7 +18,7 @@ int buffer_char(char c)
 {
 if (buf_index >= BUF)
 flush();
-buffer[buf_index] += c;
+buffer[buf_index] = c;
 buf_index++;
 return (1);
 }
