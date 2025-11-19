@@ -1,52 +1,88 @@
 #include "main.h"
+#include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
 
 /**
- * _printf - Produces output according to a format.
- * @format: The format string.
- * Return: The number of characters printed
+ * _printf - produces output according to a format
+ * @format: format string
+ * Return: number of characters printed
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
-	int i = 0;
+    va_list cart;
+    int i, count = 0;
 
-	if (!format || (format[0] == '%' && format[1] == '\0'))
-		return (-1);
+    if (!format || (format[0] == '%' && format[1] == '\0'))
+        return (-1);
+    
+    va_start(cart, format);
+    
+    for (i = 0; format[i]; i++)
+    {
+        if (format[i] == '%')
+            count += handle_specifier(format, &i, cart);
+        else
+        {
+            write(1, &format[i], 1);
+            count++;
+        }
+    }
 
-	va_start(args, format);
+    va_end(cart);
+    return (count);
+}
 
-	while (format && *format)
-	{
-		if (*format == '%')
-		{
-			format++;
-			if (*format == '\0')
-				break;
-			if (*format == 'c')
-				i += _putchar(va_arg(args, int));
-			else if (*format == 's')
-				i += print_string(va_arg(args, char *));
-			else if (*format == '%')
-				i += _putchar('%');
-			else if (*format == 'd' || *format == 'i')
-				i += print_number(va_arg(args, int));
-			else if (*format == 'b')
-				i += print_binary(va_arg(args, unsigned int));
-			else if (*format == 'p')
-				i += print_pointer(va_arg(args, void *));
-			else if (*format == 'S')
-				i += print_custom_string(va_arg(args, char *));
-			else
-			{
-				i += _putchar('%');
-				i += _putchar(*format);
-			}
-		}
-		else
-			i += _putchar(*format);
-		format++;
-	}
+/**
+ * handle_specifier - handles format specifiers
+ * @format: format string
+ * @i: pointer to current index in format string
+ * @cart: va_list of arguments
+ * Return: number of characters printed for the specifier
+ */
+int handle_specifier(const char *format, int *i, va_list cart)
+{
+    char c;
 
-	va_end(args);
-	return (i);
+    (*i)++;
+    if (!format[*i])
+        return (-1);
+
+    if (format[*i] == 'c')
+    {
+        c = va_arg(cart, int);
+        write(1, &c, 1);
+        return (1);
+    }
+    
+    if (format[*i] == 's')
+        return (print_string(va_arg(cart, char *)));
+    
+    if (format[*i] == 'S')
+        return (print_string_escaped(cart));
+    
+    if (format[*i] == '%')
+    {
+        write(1, "%", 1);
+        return (1);
+    }
+    
+    if (format[*i] == 'b')
+        return (print_binary(va_arg(cart, unsigned int)));
+    
+    if (format[*i] == 'u')
+        return (print_unsigned(cart));
+    
+    if (format[*i] == 'o')
+        return (print_octal(cart));
+    
+    if (format[*i] == 'x')
+        return (print_hex(cart, 0));
+    
+    if (format[*i] == 'X')
+        return (print_hex(cart, 1));
+
+    write(1, "%", 1);
+    write(1, &format[*i], 1);
+    return (2);
 }
