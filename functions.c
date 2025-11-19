@@ -198,53 +198,42 @@ int print_hex_number(unsigned int n, int uppercase)
     }
     return count;
 }
-/**
- * print_string_escaped - prints string with non-printable characters escaped
- * @args: variadic list
- * @buffer: character buffer
- * @buf_index: pointer to buffer index
- * Return: number of characters printed
- */
-int print_string_escaped(va_list args, char *buffer, int *buf_index)
+if (format[*i] == 'S')
 {
-    char *s = va_arg(args, char *);
-    int count = 0, i;
-    char hex_digits[] = "0123456789ABCDEF";
+    char *s = va_arg(cart, char *);
+    int count = 0, j;
+    char hex[] = "0123456789ABCDEF";
 
     if (!s)
         s = "(null)";
 
-    for (i = 0; s[i]; i++)
+    for (j = 0; s[j]; j++)
     {
-        /* Check if character is non-printable */
-        if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
+        if ((s[j] > 0 && s[j] < 32) || s[j] >= 127)
         {
-            /* Check buffer capacity for 4 characters (\x + 2 hex digits) */
+            /* Non-printable: \x + 2 hex digits */
             if (*buf_index + 4 >= 1024)
             {
                 write(1, buffer, *buf_index);
                 *buf_index = 0;
             }
-            
             buffer[(*buf_index)++] = '\\';
             buffer[(*buf_index)++] = 'x';
-            buffer[(*buf_index)++] = hex_digits[(unsigned char)s[i] / 16];
-            buffer[(*buf_index)++] = hex_digits[(unsigned char)s[i] % 16];
+            buffer[(*buf_index)++] = hex[(unsigned char)s[j] / 16];
+            buffer[(*buf_index)++] = hex[(unsigned char)s[j] % 16];
             count += 4;
         }
         else
         {
-            /* Check buffer capacity for 1 character */
+            /* Printable character */
             if (*buf_index >= 1020)
             {
                 write(1, buffer, *buf_index);
                 *buf_index = 0;
             }
-            
-            buffer[(*buf_index)++] = s[i];
+            buffer[(*buf_index)++] = s[j];
             count++;
         }
     }
-
-    return (count);
+    return count;
 }
