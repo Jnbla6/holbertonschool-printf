@@ -29,8 +29,7 @@ if (format[i] == '%')
 count += handle_specifier(format, &i, cart);
 else
 {
-_putchar(format[i]);
-count++;
+count += _putchar(format[i]);
 }
 }
 flush();
