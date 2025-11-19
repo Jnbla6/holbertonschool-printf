@@ -13,4 +13,5 @@ int print_pointer(void *ptr);
 int print_custom_string(char *str);
 int _printf(const char *format, ...);
 int print_string_escaped(va_list args);
+int print_string_escaped(va_list args, char buffer[], int *buff_ind, format_info_t info);
 #endif /* MAIN_H */
