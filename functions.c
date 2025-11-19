@@ -223,6 +223,11 @@ int print_string_escaped(va_list args)
     return (count);
 }
 
+/**
+ * print_pointer - prints pointer address
+ * @args: variadic arguments
+ * Return: number of characters printed
+ */
 int print_pointer(va_list args)
 {
     void *ptr = va_arg(args, void *);
@@ -232,17 +237,25 @@ int print_pointer(va_list args)
     char hex_digits[] = "0123456789abcdef";
 
     if (ptr == NULL)
-        return (write(1, "(nil)", 5));
+    {
+        count += _putchar('(');
+        count += _putchar('n');
+        count += _putchar('i');
+        count += _putchar('l');
+        count += _putchar(')');
+        return (count);
+    }
 
     address = (unsigned long)ptr;
 
-    /* Print "0x" prefix */
-    count += write(1, "0x", 2);
+    /* Print "0x" prefix using _putchar */
+    count += _putchar('0');
+    count += _putchar('x');
 
-    /* Convert address to hexadecimal */
+    /* Handle zero address */
     if (address == 0)
     {
-        count += write(1, "0", 1);
+        count += _putchar('0');
         return (count);
     }
 
@@ -253,10 +266,10 @@ int print_pointer(va_list args)
         address /= 16;
     }
 
-    /* Print in correct order (reverse) */
+    /* Print in correct order (reverse) using _putchar */
     while (i > 0)
     {
-        count += write(1, &buffer[--i], 1);
+        count += _putchar(buffer[--i]);
     }
 
     return (count);
