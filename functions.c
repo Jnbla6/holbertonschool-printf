@@ -201,9 +201,11 @@ int print_hex_number(unsigned int n, int uppercase)
 /**
  * print_string_escaped - prints string with non-printable characters escaped
  * @args: variadic list
+ * @buffer: character buffer
+ * @buf_index: pointer to buffer index
  * Return: number of characters printed
  */
-int print_string_escaped(va_list args)
+int print_string_escaped(va_list args, char *buffer, int *buf_index)
 {
     char *s = va_arg(args, char *);
     int count = 0, i;
@@ -217,15 +219,30 @@ int print_string_escaped(va_list args)
         /* Check if character is non-printable */
         if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
         {
-            count += write(1, "\\x", 2);
-            /* Print first hex digit */
-            count += write(1, &hex_digits[(unsigned char)s[i] / 16], 1);
-            /* Print second hex digit */
-            count += write(1, &hex_digits[(unsigned char)s[i] % 16], 1);
+            /* Check buffer capacity for 4 characters (\x + 2 hex digits) */
+            if (*buf_index + 4 >= 1024)
+            {
+                write(1, buffer, *buf_index);
+                *buf_index = 0;
+            }
+            
+            buffer[(*buf_index)++] = '\\';
+            buffer[(*buf_index)++] = 'x';
+            buffer[(*buf_index)++] = hex_digits[(unsigned char)s[i] / 16];
+            buffer[(*buf_index)++] = hex_digits[(unsigned char)s[i] % 16];
+            count += 4;
         }
         else
         {
-            count += write(1, &s[i], 1);
+            /* Check buffer capacity for 1 character */
+            if (*buf_index >= 1020)
+            {
+                write(1, buffer, *buf_index);
+                *buf_index = 0;
+            }
+            
+            buffer[(*buf_index)++] = s[i];
+            count++;
         }
     }
 
