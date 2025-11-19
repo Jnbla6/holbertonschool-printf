@@ -34,7 +34,7 @@ count += _putchar(format[i]);
 }
 flush();
 va_end(cart);
-return (_get_total_count());
+return (count);
 }
 /**
  * handle_specifier - handles format specifiers
