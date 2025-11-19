@@ -15,9 +15,15 @@ int _printf(const char *format, ...)
 {
 va_list cart;
 int i, count = 0;
+char *buffer;
 
 if (!format || (format[0] == '%' && format[1] == '\0'))
 return (-1);
+
+buffer = malloc(1024);
+if (buffer == NULL)
+return (-1);
+
 va_start(cart, format);
 for (i = 0; format[i]; i++)
 {
