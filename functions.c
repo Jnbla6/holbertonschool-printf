@@ -1,12 +1,6 @@
 #include "main.h"
 
 /**
- * _putchar - writes a character
- * @c: the character
- * Return: number of bytes written
- */
-
-/**
  * print_string - prints a string
  * @s: variadic list
  * Return: number of characters printed

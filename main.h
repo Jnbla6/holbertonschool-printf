@@ -24,7 +24,7 @@ int _putchar(char c);
 int print_number(long n);
 
 /*buffer handel*/
-void fulsh(void);
+void flush(void);
 int buffer_char(char c);
 int _get_total_count(void);
 

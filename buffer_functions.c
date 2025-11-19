@@ -7,7 +7,7 @@ static int total_count = 0;
 
 
 
-void fulsh(void)
+void flush(void)
 {
 if (buf_index > 0)
 total_count += write(1, buffer, buf_index);
