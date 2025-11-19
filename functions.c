@@ -13,13 +13,14 @@
  */
 int print_string(char *s)
 {
-int len;
-
+int len = 0;
+int i;
 if (!s)
 s = "(null)";
-while(s)
-len += _putchar(*s++);
-write(1, s, len);
+for (i = 0; s[i] != '\0'; i++)
+{
+len += _putchar(s[i]);
+}
 return (len);
 }
 
