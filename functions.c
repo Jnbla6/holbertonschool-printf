@@ -168,36 +168,10 @@ int print_octal_number(unsigned int n)
     return count;
 }
 
-/**
- * print_hex_number - converts to hex and prints
- * @n: unsigned integer
- * @uppercase: 1 for uppercase, 0 for lowercase
- * Return: number of characters printed
- */
-int print_hex_number(unsigned int n, int uppercase)
-{
-    int count = 0;
-    char buffer[9];
-    int i = 0;
-    char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+if (format[*i] == 's')
+    return (print_string(va_arg(cart, char *)));
 
-    if (n == 0)
-        return _putchar('0');
-
-    while (n > 0)
-    {
-        buffer[i] = digits[n % 16];
-        n = n / 16;
-        i++;
-    }
-
-    while (i > 0)
-    {
-        count += _putchar(buffer[i - 1]);
-        i--;
-    }
-    return count;
-}
+/* ADD THIS %S CASE RIGHT HERE */
 if (format[*i] == 'S')
 {
     char *s = va_arg(cart, char *);
@@ -212,11 +186,6 @@ if (format[*i] == 'S')
         if ((s[j] > 0 && s[j] < 32) || s[j] >= 127)
         {
             /* Non-printable: \x + 2 hex digits */
-            if (*buf_index + 4 >= 1024)
-            {
-                write(1, buffer, *buf_index);
-                *buf_index = 0;
-            }
             buffer[(*buf_index)++] = '\\';
             buffer[(*buf_index)++] = 'x';
             buffer[(*buf_index)++] = hex[(unsigned char)s[j] / 16];
@@ -226,14 +195,19 @@ if (format[*i] == 'S')
         else
         {
             /* Printable character */
-            if (*buf_index >= 1020)
-            {
-                write(1, buffer, *buf_index);
-                *buf_index = 0;
-            }
             buffer[(*buf_index)++] = s[j];
             count++;
+        }
+        
+        /* Check buffer capacity */
+        if (*buf_index >= 1000)
+        {
+            write(1, buffer, *buf_index);
+            *buf_index = 0;
         }
     }
     return count;
 }
+
+if (format[*i] == '%')
+
