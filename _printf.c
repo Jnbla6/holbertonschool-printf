@@ -9,9 +9,6 @@
  * @cart: va_list of arguments
  * Return: number of characters printed
  */
-int handle_specifier(const char *format, int *i, va_list cart);
-void flush(void);
-int _get_total_count(void);
 
 int _printf(const char *format, ...)
 {

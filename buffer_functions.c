@@ -1,4 +1,5 @@
 #include "main.h"
+#include <unistd.h>
 
 #define BUF 1024
 static char buffer[BUF];
