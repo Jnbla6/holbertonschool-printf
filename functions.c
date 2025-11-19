@@ -192,8 +192,8 @@ int print_hex_number(unsigned int n, int uppercase)
 }
 
 /**
- * print_string_escaped - prints string with non-printable characters escaped
- * @args: variadic list
+ * print_string_escaped - prints string with non-printable chars in hex
+ * @args: variadic arguments
  * Return: number of characters printed
  */
 int print_string_escaped(va_list args)
@@ -210,17 +210,15 @@ int print_string_escaped(va_list args)
         /* Check if character is non-printable */
         if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
         {
-            count += write(1, "\\x", 2);
-            /* Print first hex digit */
-            count += write(1, &hex_digits[(unsigned char)s[i] / 16], 1);
-            /* Print second hex digit */
-            count += write(1, &hex_digits[(unsigned char)s[i] % 16], 1);
+            count += _putchar('\\');
+            count += _putchar('x');
+            count += _putchar(hex_digits[(unsigned char)s[i] / 16]);
+            count += _putchar(hex_digits[(unsigned char)s[i] % 16]);
         }
         else
         {
-            count += write(1, &s[i], 1);
+            count += _putchar(s[i]);
         }
     }
-
     return (count);
 }
