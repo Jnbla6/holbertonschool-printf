@@ -1,232 +1,114 @@
 #include "main.h"
 
-/**
- * _putchar - writes a character
- * @c: the character
- * Return: number of bytes written
- */
 int _putchar(char c)
 {
-    return (write(1, &c, 1));
+	return (write(1, &c, 1));
 }
 
-/**
- * print_string - prints a string
- * @s: variadic list
- * Return: number of characters printed
- */
-int print_string(char *s)
+int print_string(char *str)
 {
-    int len;
+	int c = 0;
 
-    if (!s)
-        s = "(null)";
-    len = strlen(s);
-    write(1, s, len);
-    return (len);
+	if (!str)
+		str = "(null)";
+
+	while (*str)
+	{
+		c += _putchar(*str);
+		str++;
+	}
+	return (c);
 }
 
-/**
- * print_number - recursive function to print numbers
- * @n: long number
- * Return: count of characters
- */
-int print_number(long n)
+int print_number(int n)
 {
-    int count = 0;
+	int c = 0;
+	unsigned int num;
 
-    if (n < 0)
-    {
-        count += _putchar('-');
-        n = -n;
-    }
+	if (n < 0)
+	{
+		c += _putchar('-');
+		num = -n;
+	}
+	else
+		num = n;
 
-    if (n / 10)
-        count += print_number(n / 10);
+	if (num / 10)
+		c += print_number(num / 10);
+	c += _putchar(num % 10 + '0');
 
-    count += _putchar((n % 10) + '0');
-
-    return (count);
+	return (c);
 }
 
-/**
- * print_int - prints integers %d %i
- * @args: variadic list
- * Return: number of characters printed
- */
-int print_int(va_list args)
-{
-    long n = va_arg(args, int);
-    return (print_number(n));
-}
-
-/**
- * print_binary - converts unsigned int to binary and prints it
- * @n: unsigned integer to convert
- * Return: number of characters printed
- */
 int print_binary(unsigned int n)
 {
-    int count = 0;
-    char buffer[33];
-    int i = 0;
+	int c = 0;
 
-    if (n == 0)
-        return _putchar('0');
+	if (n > 1)
+		c += print_binary(n / 2);
 
-    while (n > 0)
-    {
-        buffer[i] = (n % 2) + '0';
-        n = n / 2;
-        i++;
-    }
-
-    while (i > 0)
-    {
-        count += _putchar(buffer[i - 1]);
-        i--;
-    }
-
-    return count;
+	c += _putchar((n % 2) + '0');
+	return (c);
 }
 
-/**
- * print_unsigned - prints unsigned integers
- * @args: variadic list
- * Return: number of characters printed
- */
-int print_unsigned(va_list args)
+int print_pointer(void *ptr)
 {
-    unsigned int n = va_arg(args, unsigned int);
-    return (print_unsigned_number(n));
+	unsigned long address = (unsigned long)ptr;
+	int count = 0;
+	int digit, i = 0;
+	char buffer[20];
+
+	if (ptr == NULL)
+		return (print_string("(nil)"));
+
+	if (address == 0)
+	{
+		buffer[i++] = '0';
+	}
+	else
+	{
+		while (address > 0)
+		{
+			digit = address % 16;
+			buffer[i++] = (digit < 10) ? ('0' + digit) : ('a' + digit - 10);
+			address /= 16;
+		}
+	}
+
+	count += _putchar('0');
+	count += _putchar('x');
+
+	while (i > 0)
+		count += _putchar(buffer[--i]);
+
+	return (count);
 }
 
-/**
- * print_octal - prints octal numbers
- * @args: variadic list
- * Return: number of characters printed
- */
-int print_octal(va_list args)
+int print_custom_string(char *str)
 {
-    unsigned int n = va_arg(args, unsigned int);
-    return (print_octal_number(n));
-}
+	int count = 0;
+	unsigned char current;
 
-/**
- * print_hex - prints hexadecimal numbers
- * @args: variadic list
- * @uppercase: 1 for uppercase, 0 for lowercase
- * Return: number of characters printed
- */
-int print_hex(va_list args, int uppercase)
-{
-    unsigned int n = va_arg(args, unsigned int);
-    return (print_hex_number(n, uppercase));
-}
+	if (!str)
+		return (print_string("(null)"));
 
-/**
- * print_unsigned_number - recursive function for unsigned numbers
- * @n: unsigned number
- * Return: count of characters
- */
-int print_unsigned_number(unsigned int n)
-{
-    int count = 0;
+	while (*str)
+	{
+		current = (unsigned char)*str;
+		
+		if ((current > 0 && current < 32) || current >= 127)
+		{
+			count += _putchar('\\');
+			count += _putchar('x');
+			count += _putchar("0123456789ABCDEF"[current / 16]);
+			count += _putchar("0123456789ABCDEF"[current % 16]);
+		}
+		else
+		{
+			count += _putchar(current);
+		}
+		str++;
+	}
 
-    if (n / 10)
-        count += print_unsigned_number(n / 10);
-
-    count += _putchar((n % 10) + '0');
-    return (count);
-}
-
-/**
- * print_octal_number - converts to octal and prints
- * @n: unsigned integer
- * Return: number of characters printed
- */
-int print_octal_number(unsigned int n)
-{
-    int count = 0;
-    char buffer[12];
-    int i = 0;
-
-    if (n == 0)
-        return _putchar('0');
-
-    while (n > 0)
-    {
-        buffer[i] = (n % 8) + '0';
-        n = n / 8;
-        i++;
-    }
-
-    while (i > 0)
-    {
-        count += _putchar(buffer[i - 1]);
-        i--;
-    }
-    return count;
-}
-
-/**
- * print_hex_number - converts to hex and prints
- * @n: unsigned integer
- * @uppercase: 1 for uppercase, 0 for lowercase
- * Return: number of characters printed
- */
-int print_hex_number(unsigned int n, int uppercase)
-{
-    int count = 0;
-    char buffer[9];
-    int i = 0;
-    char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
-
-    if (n == 0)
-        return _putchar('0');
-
-    while (n > 0)
-    {
-        buffer[i] = digits[n % 16];
-        n = n / 16;
-        i++;
-    }
-
-    while (i > 0)
-    {
-        count += _putchar(buffer[i - 1]);
-        i--;
-    }
-    return count;
-}
-
-/**
- * print_string_escaped - prints string with non-printable characters escaped
- * @args: variadic list
- * Return: number of characters printed
- */
-int print_string_escaped(va_list args)
-{
-    char *s = va_arg(args, char *);
-    int count = 0, i;
-    char hex_digits[] = "0123456789ABCDEF";
-
-    if (!s)
-        s = "(null)";
-
-    for (i = 0; s[i]; i++)
-    {
-        if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
-        {
-            count += write(1, "\\x", 2);
-            count += write(1, &hex_digits[(unsigned char)s[i] / 16], 1);
-            count += write(1, &hex_digits[(unsigned char)s[i] % 16], 1);
-        }
-        else
-        {
-            count += write(1, &s[i], 1);
-        }
-    }
-
-    return (count);
+	return (count);
 }
