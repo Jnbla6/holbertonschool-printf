@@ -168,46 +168,67 @@ int print_octal_number(unsigned int n)
     return count;
 }
 
-if (format[*i] == 's')
-    return (print_string(va_arg(cart, char *)));
-
-/* ADD THIS %S CASE RIGHT HERE */
-if (format[*i] == 'S')
+/**
+ * print_hex_number - converts to hex and prints
+ * @n: unsigned integer
+ * @uppercase: 1 for uppercase, 0 for lowercase
+ * Return: number of characters printed
+ */
+int print_hex_number(unsigned int n, int uppercase)
 {
-    char *s = va_arg(cart, char *);
-    int count = 0, j;
-    char hex[] = "0123456789ABCDEF";
+    int count = 0;
+    char buffer[9];
+    int i = 0;
+    char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
 
-    if (!s)
-        s = "(null)";
+    if (n == 0)
+        return _putchar('0');
 
-    for (j = 0; s[j]; j++)
+    while (n > 0)
     {
-        if ((s[j] > 0 && s[j] < 32) || s[j] >= 127)
-        {
-            /* Non-printable: \x + 2 hex digits */
-            buffer[(*buf_index)++] = '\\';
-            buffer[(*buf_index)++] = 'x';
-            buffer[(*buf_index)++] = hex[(unsigned char)s[j] / 16];
-            buffer[(*buf_index)++] = hex[(unsigned char)s[j] % 16];
-            count += 4;
-        }
-        else
-        {
-            /* Printable character */
-            buffer[(*buf_index)++] = s[j];
-            count++;
-        }
-        
-        /* Check buffer capacity */
-        if (*buf_index >= 1000)
-        {
-            write(1, buffer, *buf_index);
-            *buf_index = 0;
-        }
+        buffer[i] = digits[n % 16];
+        n = n / 16;
+        i++;
+    }
+
+    while (i > 0)
+    {
+        count += _putchar(buffer[i - 1]);
+        i--;
     }
     return count;
 }
 
-if (format[*i] == '%')
+/**
+ * print_string_escaped - prints string with non-printable characters escaped
+ * @args: variadic list
+ * Return: number of characters printed
+ */
+int print_string_escaped(va_list args)
+{
+    char *s = va_arg(args, char *);
+    int count = 0, i;
+    char hex_digits[] = "0123456789ABCDEF";
 
+    if (!s)
+        s = "(null)";
+
+    for (i = 0; s[i]; i++)
+    {
+        /* Check if character is non-printable (0 < ASCII < 32 or >= 127) */
+        if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
+        {
+            count += write(1, "\\x", 2);
+            /* Print first hex digit (upper case) */
+            count += write(1, &hex_digits[(unsigned char)s[i] / 16], 1);
+            /* Print second hex digit (upper case) */
+            count += write(1, &hex_digits[(unsigned char)s[i] % 16], 1);
+        }
+        else
+        {
+            count += write(1, &s[i], 1);
+        }
+    }
+
+    return (count);
+}
