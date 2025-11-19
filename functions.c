@@ -222,3 +222,42 @@ int print_string_escaped(va_list args)
     }
     return (count);
 }
+
+int print_pointer(va_list args)
+{
+    void *ptr = va_arg(args, void *);
+    unsigned long address;
+    char buffer[20];
+    int i = 0, count = 0;
+    char hex_digits[] = "0123456789abcdef";
+
+    if (ptr == NULL)
+        return (write(1, "(nil)", 5));
+
+    address = (unsigned long)ptr;
+
+    /* Print "0x" prefix */
+    count += write(1, "0x", 2);
+
+    /* Convert address to hexadecimal */
+    if (address == 0)
+    {
+        count += write(1, "0", 1);
+        return (count);
+    }
+
+    /* Build hexadecimal string in reverse */
+    while (address > 0)
+    {
+        buffer[i++] = hex_digits[address % 16];
+        address /= 16;
+    }
+
+    /* Print in correct order (reverse) */
+    while (i > 0)
+    {
+        count += write(1, &buffer[--i], 1);
+    }
+
+    return (count);
+}
