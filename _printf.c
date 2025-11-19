@@ -47,12 +47,7 @@ int handle_specifier(const char *format, int *i, va_list cart)
     (*i)++;
     if (!format[*i])
         return (-1);
-
-    /* DEBUG: Print which specifier we're processing */
-write(1, "DEBUG: Processing specifier '", 29);
-    write(1, &format[*i], 1);
-    write(1, "'\n", 2);
-
+    
     if (format[*i] == 'c')
     {
         c = va_arg(cart, int);
@@ -64,10 +59,7 @@ write(1, "DEBUG: Processing specifier '", 29);
         return (print_string(va_arg(cart, char *)));
     
     if (format[*i] == 'S')
-    {
-        write(1, "DEBUG: %S case executed!\n", 25);
         return (print_string_escaped(cart));
-    }
     
     if (format[*i] == '%')
     {
