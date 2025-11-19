@@ -10,7 +10,8 @@
  * Return: number of characters printed
  */
 int handle_specifier(const char *format, int *i, va_list cart);
-void _flush_buffer(void);
+void flush(void);
+int _get_total_count(void);
 
 int _printf(const char *format, ...)
 {
@@ -32,11 +33,9 @@ _putchar(format[i]);
 count++;
 }
 }
-
 flush();
-
 va_end(cart);
-return (count);
+return (_get_total_count());
 }
 /**
  * handle_specifier - handles format specifiers

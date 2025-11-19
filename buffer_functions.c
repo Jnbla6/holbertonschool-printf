@@ -27,3 +27,8 @@ int _putchar(char c)
 {
     return (buffer_char(c));
 }
+
+int _get_total_count(void)
+{
+    return (total_count);
+}
