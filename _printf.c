@@ -46,6 +46,7 @@ int handle_specifier(const char *format, int *i, va_list cart)
 char c;
 int count_chars =0;
 int flags = 0;
+int real_i = *i;
 
 (*i)++;
 if (!format[*i])
@@ -96,6 +97,7 @@ if (format[*i] == 'b')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
     return (print_pointer(cart));
+    *i = real_i;
     _putchar('%');
     if (flags & 1)
     _putchar('+');
