@@ -74,6 +74,8 @@ The function processes the format string and handles the following conversion sp
 
 *this Project completed for Holberton School.*
 
+## FlowChart
+
 ```mermaid
 flowchart TD
     A["Start _printf"] --> B["Initialize count_chars and va_list"]
