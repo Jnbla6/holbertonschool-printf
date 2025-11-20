@@ -21,8 +21,6 @@ int print_hex_number(unsigned int n, int uppercase);
 int print_string_escaped(va_list args);
 int print_pointer(va_list args);
 
-
-
 /* Helpers */
 int _putchar(char c);
 int print_number(long n);
