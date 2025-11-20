@@ -10,13 +10,13 @@ int _printf(const char *format, ...);
 
 /* Print functions */
 int print_string(char *s);
-int print_int(va_list args);
+int print_int(va_list args, int flags);
 int print_binary(unsigned int n);
-int print_unsigned(va_list args);
-int print_octal(va_list args);
-int print_hex(va_list args, int uppercase);
+int print_unsigned(va_list args, int flags);
+int print_octal(va_list args, int flags);
+int print_hex(va_list args, int uppercase, int flags);
 int print_unsigned_number(unsigned int n);
-int print_octal_number(unsigned int n);
+int print_octal_number(unsigned int n, int flags);
 int print_hex_number(unsigned int n, int uppercase);
 int print_string_escaped(va_list args);
 int print_pointer(va_list args);

@@ -45,10 +45,28 @@ int handle_specifier(const char *format, int *i, va_list cart)
 {
 char c;
 int count_chars =0;
+int flags = 0;
 
 (*i)++;
 if (!format[*i])
 return (-1);
+
+while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#')
+{
+if (format[*i] == '+') flags |= 1; /* flag for plus case*/
+if (format[*i] == ' ') flags |= 2; /* flag for space case*/
+if (format[*i] == '#') flags |= 4; /* flag for Hash case*/
+(*i)++;
+if (!format[*i])
+return (-1);
+}
+
+if ((flags & 1) && (flags & 2)) /* if plus flag and space flag combine*/
+{
+/* + take plus over space */
+flags &= ~2;  // this for remove space flag
+}
+
 if (format[*i] == 'c')
 {
 c = va_arg(cart, int);
@@ -63,25 +81,28 @@ count_chars += _putchar('%');
 return (count_chars);
 } 
  if (format[*i] == 'd' || format[*i] == 'i')
-        return (print_int(cart));
+        return (print_int(cart, flags));
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
-        return (print_unsigned(cart));
+        return (print_unsigned(cart, flags));
     if (format[*i] == 'o')
-        return (print_octal(cart));
+        return (print_octal(cart, flags));
     if (format[*i] == 'x')
-        return (print_hex(cart, 0));
+        return (print_hex(cart, 0, flags));
     if (format[*i] == 'X')
-        return (print_hex(cart, 1));
+        return (print_hex(cart, 1, flags));
     if (format[*i] == 'S')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
     return (print_pointer(cart));
-{
-
-_putchar('%');
-_putchar(format[*i]);
-return (2);
-} 
+    _putchar('%');
+    if (flags & 1)
+    _putchar('+');
+    if (flags & 2)
+    _putchar(' ');
+    if (flags & 4)
+    _putchar('#');
+    _putchar(format[*i]);
+    return (2 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
 }

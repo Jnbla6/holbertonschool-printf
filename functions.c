@@ -46,10 +46,21 @@ int print_number(long n)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_int(va_list args)
+int print_int(va_list args, int flags)
 {
     long n = va_arg(args, int);
-    return (print_number(n));
+    int count = 0;
+
+    /* added this to the function to handle flags to solve task 8*/
+    if (n >= 0)
+    {
+        if (flags & 1)       // this flag is + flag
+            count += _putchar('+');
+        else if (flags & 2)  // and this a space flag
+            count += _putchar(' ');
+    }
+
+    return (count + print_number(n));
 }
  
 /**
@@ -86,9 +97,10 @@ int print_int(va_list args)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_unsigned(va_list args)
+int print_unsigned(va_list args, int flags)
 {
     unsigned int n = va_arg(args, unsigned int);
+    (void)flags; /* this becuase flags dosent change on u*/
     return (print_unsigned_number(n));
 }
 
@@ -97,10 +109,16 @@ int print_unsigned(va_list args)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_octal(va_list args)
+int print_octal(va_list args, int flags)
 {
     unsigned int n = va_arg(args, unsigned int);
-    return (print_octal_number(n));
+    int count = 0;
+
+    /* this to Handle # flag and print 0 if number is not zero */
+    if ((flags & 4) && n != 0)
+        count += _putchar('0');
+
+    return (count + print_octal_number(n));
 }
 
 /**
@@ -109,10 +127,17 @@ int print_octal(va_list args)
  * @uppercase: 1 for uppercase, 0 for lowercase
  * Return: number of characters printed
  */
-int print_hex(va_list args, int uppercase)
+int print_hex(va_list args, int uppercase, int flags)
 {
     unsigned int n = va_arg(args, unsigned int);
-    return (print_hex_number(n, uppercase));
+    int count = 0;
+
+    if ((flags & 4) && n != '0')
+    count += _putchar('0');
+    count += _putchar(uppercase ? 'X' : 'x');
+
+
+    return (count + print_hex_number(n, uppercase));
 }
 
 /**
