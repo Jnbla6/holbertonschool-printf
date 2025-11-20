@@ -81,6 +81,7 @@ if (!format[*i] && flags)
     if (flags & 1) count_chars += _putchar('+');
     if (flags & 2) count_chars += _putchar(' ');
     if (flags & 4) count_chars += _putchar('#');
+    (*i)--;
     return count_chars;
 }
 
