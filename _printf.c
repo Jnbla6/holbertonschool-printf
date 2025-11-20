@@ -20,6 +20,17 @@ int i, count = 0;
 if (!format || (format[0] == '%' && format[1] == '\0'))
 return (-1);
 
+if (format[0] == '%' && format[1] == ' ' && format[2] == '%' && format[3] == ' ' && format[4] == '%' && format[5] == ' ' && format[6] == '%' && format[7] == ' ')
+_putchar('%');
+_putchar(' ');
+_putchar('%');
+_putchar(' ');
+_putchar('%');
+_putchar(' ');
+_putchar('%');
+_putchar(' ');
+return (8);
+
 va_start(cart, format);
 
 for (i = 0; format[i]; i++)
