@@ -106,5 +106,5 @@ if (format[*i] == 'b')
     if (flags & 4)
     _putchar('#');
     _putchar(format[*i]);
-    return (2 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
+    return (1 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
 }
