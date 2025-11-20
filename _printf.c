@@ -60,7 +60,16 @@ if (format[*i] == ' ') flags |= 2; /* flag for space case*/
 if (format[*i] == '#') flags |= 4; /* flag for Hash case*/
 (*i)++;
 if (!format[*i])
-return (-1);
+break;
+}
+
+if (!format[*i] && flags)  
+{
+    count_chars += _putchar('%');
+    if (flags & 1) count_chars += _putchar('+');
+    if (flags & 2) count_chars += _putchar(' ');
+    if (flags & 4) count_chars += _putchar('#');
+    return count_chars;
 }
 
 
@@ -101,16 +110,13 @@ if (format[*i] == 'b')
     return (print_pointer(cart));
 
 
-printed_len += _putchar('%');
-
+count_chars += _putchar('%');
 if (flags & 1)
-printed_len += _putchar('+');
+count_chars += _putchar('+');
 if (flags & 2)
-printed_len += _putchar(' ');
+count_chars += _putchar(' ');
 if (flags & 4)
-printed_len += _putchar('#');
-
-printed_len += _putchar(format[*i]);
-
-return (printed_len);
+count_chars += _putchar('#');
+count_chars += _putchar(format[*i]);
+return (count_chars);
 }
