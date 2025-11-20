@@ -47,6 +47,7 @@ char c;
 int count_chars =0;
 int flags = 0;
 int real_i = *i;
+int has_flags = 0;
 
 (*i)++;
 if (!format[*i])
@@ -54,20 +55,39 @@ return (-1);
 
 while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#')
 {
+has_flags = 1;
 if (format[*i] == '+') flags |= 1; /* flag for plus case*/
 if (format[*i] == ' ') flags |= 2; /* flag for space case*/
 if (format[*i] == '#') flags |= 4; /* flag for Hash case*/
 (*i)++;
 if (!format[*i])
-return (-1);
+break;
 }
 
+if (!format[*i] && has_flags)
+{
 *i = real_i;
 _putchar('%');
 if (flags & 1) _putchar('+');
 if (flags & 2) _putchar(' ');
 if (flags & 4) _putchar('#');
 return (1 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
+}
+
+if (has_flags && 
+format[*i] != 'c' && format[*i] != 's' && format[*i] != '%' &&
+format[*i] != 'd' && format[*i] != 'i' && format[*i] != 'b' &&
+format[*i] != 'u' && format[*i] != 'o' && format[*i] != 'x' &&
+format[*i] != 'X' && format[*i] != 'S' && format[*i] != 'p')
+{
+*i = real_i;
+_putchar('%');
+if (flags & 1) _putchar('+');
+if (flags & 2) _putchar(' ');
+if (flags & 4) _putchar('#');
+_putchar(format[*i]);
+return (2 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
+}
 
 if ((flags & 1) && (flags & 2)) /* if plus flag and space flag combine*/
 {
@@ -113,5 +133,5 @@ if (format[*i] == 'b')
     if (flags & 4)
     _putchar('#');
     _putchar(format[*i]);
-    return (1 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
+    return (2 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
 }
