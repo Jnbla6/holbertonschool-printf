@@ -62,6 +62,13 @@ if (!format[*i])
 return (-1);
 }
 
+*i = real_i;
+_putchar('%');
+if (flags & 1) _putchar('+');
+if (flags & 2) _putchar(' ');
+if (flags & 4) _putchar('#');
+return (1 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
+
 if ((flags & 1) && (flags & 2)) /* if plus flag and space flag combine*/
 {
 /* + take plus over space */
