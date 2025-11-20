@@ -103,6 +103,8 @@ return (print_string(va_arg(cart, char *)));
 if (format[*i] == '%')
 {
 count_chars += _putchar('%');
+if (flags & 2)
+count_chars += _putchar(' ');
 return (count_chars);
 } 
  if (format[*i] == 'd' || format[*i] == 'i')
