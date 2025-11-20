@@ -68,7 +68,7 @@ The function processes the format string and handles the following conversion sp
 
 ## 👥 Authors
   * **Badr**
-  * **Rama**
+  * **Rama Al Shehri**
 
 -----
 
