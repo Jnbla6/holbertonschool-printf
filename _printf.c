@@ -108,8 +108,6 @@ if (format[*i] == 'b')
     if (format[*i] == 'p')
     return (print_pointer(cart));
 
-
-count_chars += _putchar('%');
 if (flags & 1)
 count_chars += _putchar('+');
 if (flags & 2)
