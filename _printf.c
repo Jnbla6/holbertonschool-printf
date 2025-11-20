@@ -64,7 +64,7 @@ return (-1);
 if ((flags & 1) && (flags & 2)) /* if plus flag and space flag combine*/
 {
 /* + take plus over space */
-flags &= ~2;  // this for remove space flag
+flags &= ~2;  /* and this for remove space flag */
 }
 
 if (format[*i] == 'c')

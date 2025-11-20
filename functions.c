@@ -54,9 +54,9 @@ int print_int(va_list args, int flags)
     /* added this to the function to handle flags to solve task 8*/
     if (n >= 0)
     {
-        if (flags & 1)       // this flag is + flag
+        if (flags & 1)       /* this flag is + flag */
             count += _putchar('+');
-        else if (flags & 2)  // and this a space flag
+        else if (flags & 2)  /* and this a space flag */
             count += _putchar(' ');
     }
 
@@ -131,10 +131,10 @@ int print_hex(va_list args, int uppercase, int flags)
 {
     unsigned int n = va_arg(args, unsigned int);
     int count = 0;
-
+    /* and this like the before*/
     if ((flags & 4) && n != '0')
     count += _putchar('0');
-    count += _putchar(uppercase ? 'X' : 'x');
+    count += _putchar(uppercase ? 'X' : 'x'); /* this to handle the case*/
 
 
     return (count + print_hex_number(n, uppercase));
