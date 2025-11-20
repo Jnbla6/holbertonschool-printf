@@ -46,7 +46,6 @@ int handle_specifier(const char *format, int *i, va_list cart)
 char c;
 int count_chars =0;
 int flags = 0;
-int printed_len = 0;
 
 
 (*i)++;
