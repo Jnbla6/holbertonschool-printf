@@ -66,6 +66,14 @@ The function processes the format string and handles the following conversion sp
 | `main.h` | Header file containing function prototypes and standard library includes (`<stdarg.h>`, `<unistd.h>`, `<string.h>`). |
 | `man_3_printf` | Custom manual page documenting the function's usage, synopsis, and examples. |
 
+## 👥 Authors
+  * **Badr Alshaya**
+  * **Rama Al Shehri**
+
+-----
+
+*this Project completed for Holberton School.*
+
 ```mermaid
 flowchart TD
     A["Start _printf"] --> B["Initialize count_chars and va_list"]
@@ -88,13 +96,3 @@ flowchart TD
     C --> S{"End of format string?"}
     S -->|Yes| T["va_end and return count_chars"]
     S -->|No| C
-
-
-
-## 👥 Authors
-  * **Badr Alshaya**
-  * **Rama Al Shehri**
-
------
-
-*this Project completed for Holberton School.*
