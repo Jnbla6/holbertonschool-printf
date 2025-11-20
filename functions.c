@@ -132,7 +132,7 @@ int print_hex(va_list args, int uppercase, int flags)
     unsigned int n = va_arg(args, unsigned int);
     int count = 0;
     /* and this like the before*/
-    if ((flags & 4) && n != '0')
+    if ((flags & 4) && n != 0)
     {
     count += _putchar('0');
     count += _putchar(uppercase ? 'X' : 'x'); /* this to handle the case*/
