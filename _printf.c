@@ -46,7 +46,8 @@ int handle_specifier(const char *format, int *i, va_list cart)
 char c;
 int count_chars =0;
 int flags = 0;
-int real_i = *i;
+int printed_len = 0;
+
 
 (*i)++;
 if (!format[*i])
@@ -98,14 +99,18 @@ if (format[*i] == 'b')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
     return (print_pointer(cart));
-    *i = real_i;
-    _putchar('%');
-    if (flags & 1)
-    _putchar('+');
-    if (flags & 2)
-    _putchar(' ');
-    if (flags & 4)
-    _putchar('#');
-    _putchar(format[*i]);
-    return (2 + ((flags & 1) ? 1 : 0) + ((flags & 2) ? 1 : 0) + ((flags & 4) ? 1 : 0));
+
+
+printed_len += _putchar('%');
+
+if (flags & 1)
+printed_len += _putchar('+');
+if (flags & 2)
+printed_len += _putchar(' ');
+if (flags & 4)
+printed_len += _putchar('#');
+
+printed_len += _putchar(format[*i]);
+
+return (printed_len);
 }
