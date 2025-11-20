@@ -1,6 +1,6 @@
-.TH _PRINTF 3 "November 2025" "printf project"
+.TH _PRINTF 3 "November 2025" "Custom printf Project"
 .SH NAME
-_printf \- custom formatted output conversion
+_printf \- custom formatted output function with buffer optimization
 
 .SH SYNOPSIS
 .B #include "main.h"
@@ -10,66 +10,264 @@ _printf \- custom formatted output conversion
 .SH DESCRIPTION
 The
 .B _printf()
-function writes output to stdout according to a format string that specifies how subsequent arguments are converted for output.
+function writes formatted output to stdout according to a format string that specifies how subsequent arguments are converted for output.  
+This custom implementation supports multiple conversion specifiers, flags, and buffer optimization for efficient output.
 
-This is a custom implementation of the standard printf function that supports basic format specifiers. The format string is composed of zero or more directives: ordinary characters (not %), which are copied unchanged to the output stream, and conversion specifications, each of which results in fetching zero or more subsequent arguments.
- authors : rama and bader
-Supported format specifiers:
+.PP
+The format string may contain ordinary characters (printed directly) and conversion specifiers, which are introduced by '%'. Supported flags include '+', ' ', and '#' applied to specific conversions.
+
+.SH ARCHITECTURE OVERVIEW
+The implementation has a modular architecture:
+
+.RS
+.TP
+.B Main _printf Function
+Loops over the format string, detects specifiers, delegates to handlers, and manages the buffer.
+.TP
+.B handle_specifier
+Processes each specifier, applies flags, and calls the relevant conversion function.
+.TP
+.B Conversion Functions
+Functions include: print_string, print_int, print_binary, print_unsigned, print_octal, print_hex, print_string_escaped, print_pointer.
+.TP
+.B Buffer System
+A fixed 1024-byte buffer accumulates characters for efficient output, flushed when full or at the end.
+.RE
+
+.SH FLOWCHART
+The following flowchart illustrates the _printf execution flow in ASCII suitable for man page:
+
+.nf
+        +----------------------+
+        |     _printf Start     |
+        +----------+-----------+
+                   |
+                   v
+        +----------+-----------+
+        | Format string valid? |
+        +----+---------+-------+
+             |         |
+            No         Yes
+             |         |
+             v         v
+       +------------+   +------------------+
+       | Return -1  |   | Initialize va_list |
+       +------------+   +------------------+
+                           |
+                           v
+                   +------------------+
+                   | Loop over format[] |
+                   +------------------+
+                           |
+                           v
+                   +------------------+
+                   | Is format[i] == '%' ? |
+                   +---------+--------+
+                             |
+                   +---------+---------+
+                   |                   |
+                  No                  Yes
+                   |                   |
+                   v                   v
+          _putchar(format[i])   handle_specifier()
+                   |                   |
+                   +---------+---------+
+                             |
+                             v
+                     +---------------+
+                     | Add char to buffer |
+                     +---------------+
+                             |
+                     +-------+-------+
+                     | Buffer full?  |
+                     +----+----+----+
+                          |    |
+                         Yes   No
+                          |    |
+                          v    v
+                        flush() |
+                          |    |
+                          +----+
+                             |
+                             v
+                     +---------------+
+                     | End of format? |
+                     +-------+-------+
+                             |
+                    +--------+--------+
+                    |                 |
+                   No                Yes
+                    |                 |
+                    +-----------------+
+                             |
+                             v
+                           flush()
+                             |
+                             v
+                         va_end(cart)
+                             |
+                             v
+                       Return total_count
+.fi
+
+.SH FLAGS
+.RS
+.TP
+.B +
+For signed numbers (%d, %i), prepends a plus sign for positive values.
+.TP
+.B (space)
+For signed numbers, prepends a space if no sign is printed.
+.TP
+.B #
+For octal (%o), prepends '0'.  
+For hexadecimal (%x, %X), prepends '0x' or '0X' for non-zero values.
+.RE
+
+.SH CONVERSION SPECIFIERS
+Supported specifiers:
+
 .RS
 .TP
 .B %c
-Print a single character
+Print a single character (int argument).
 .TP
 .B %s
-Print a string of characters
+Print a string. If NULL, prints "(null)".
+.TP
+.B %S
+Print a string with non-printable characters as '\xHH'.
 .TP
 .B %%
-Print a literal percent sign
+Print a literal '%'.
 .TP
 .B %d, %i
-Print a signed decimal integer
+Signed decimal integer.
+.TP
+.B %b
+Unsigned integer in binary.
+.TP
+.B %u
+Unsigned decimal integer.
+.TP
+.B %o
+Unsigned integer in octal.
+.TP
+.B %x
+Unsigned integer in hexadecimal (lowercase).
+.TP
+.B %X
+Unsigned integer in hexadecimal (uppercase).
+.TP
+.B %p
+Pointer address in hexadecimal, NULL prints "(nil)".
 .RE
 
-.PP
-If a NULL pointer is passed for %s conversion, the string "(null)" is printed.
+.SH BUFFER IMPLEMENTATION
+.RS
+.TP
+.B Buffer Size
+1024 characters fixed.
+.TP
+.B Buffer Strategy
+Characters are added until full or end of format string.
+.TP
+.B Flush Mechanism
+Writes buffer content to stdout in a single write call.
+.TP
+.B Performance
+Reduces system calls for faster output.
+.RE
 
 .SH RETURN VALUE
-Upon successful return, the
-.B _printf()
-function returns the number of characters printed (excluding the null byte used to end output to strings).
-
-If an output error occurs or if format is NULL, a negative number is returned.
+Returns total number of characters printed (excluding null terminator).  
+Returns -1 on error:
+.RS
+.TP
+.B - format is NULL
+.TP
+.B - lone '%' at end of string
+.TP
+.B - system-level write failure
+.RE
 
 .SH EXAMPLES
-The following program:
+The following examples demonstrate usage:
+
 .RS
 .nf
 #include "main.h"
+#include <limits.h>
 
 int main(void)
 {
-    _printf("Hello, %s!\\n", "world");
-    _printf("Character: %c\\n", 'A');
-    _printf("Number: %d\\n", 42);
-    return (0);
+    _printf("Char: %c\n", 'A');
+    _printf("String: %s\n", "Hello, World!");
+    _printf("Percent: %%\n");
+    _printf("Signed: %+d, Space: % d\n", 42, 42);
+    _printf("Binary: %b\n", 98);
+    _printf("Unsigned: %u\n", 4294967295U);
+    _printf("Octal: %#o\n", 64);
+    _printf("Hex lowercase: %#x, Hex uppercase: %#X\n", 255, 255);
+    _printf("Pointer: %p, Null pointer: %p\n", main, NULL);
+    _printf("Escaped string: %S\n", "Hello\x01World\x7F");
+    _printf("Multiple specifiers: %c %s %d %u %o %x %X %%\n", 'Z', "Test", -123, 456, 789, 255, 255);
+    _printf("Long string: %s\n", "This is a long string to test the buffer flush mechanism.");
+    return 0;
 }
 .fi
 .RE
-.PP
-produces output:
+
+.SH LIMITATIONS
 .RS
-.nf
-Hello, world!
-Character: A
-Number: 42
-.fi
+.TP
+.B - Field width, precision, and length modifiers are not supported.
+.TP
+.B - Floating point (%f, %e, %g) not supported.
+.TP
+.B - Wide characters and locale support not included.
+.TP
+.B - No format string attack protection.
 .RE
 
-.SH BUGS
-This implementation does not support flags, field width, precision, or length modifiers. Floating point conversions and other specifiers like %x, %o, %u are not supported.
+.SH TESTING METHODOLOGY
+.RS
+.TP
+.B Unit Tests
+Test each conversion specifier individually.
+.TP
+.B Integration Tests
+Multiple specifiers per format string.
+.TP
+.B Edge Cases
+NULL strings, zero, negative numbers, UINT_MAX.
+.TP
+.B Buffer Tests
+Strings exceeding 1024 characters to test flush.
+.TP
+.B Memory Tests
+Use Valgrind for memory leaks and undefined behavior.
+.RE
 
-.SH SEE ALSO
-.BR printf (3)
+.SH PORTABILITY
+.RS
+.TP
+.B Standards Compliance
+C89/C90 with GNU89 extensions.
+.TP
+.B Platform Assumptions
+32/64-bit two's complement, ASCII encoding.
+.TP
+.B Dependencies
+Requires stdarg.h, unistd.h, string.h, stdlib.h.
+.RE
 
 .SH AUTHORS
-rama and badr
+Developed by rama and badr for educational purposes.
+
+.SH COPYRIGHT
+This manual page and code are part of the printf project. Redistribution is permitted under project guidelines.
+
+.SH HISTORY
+Developed as an educational project to understand printf internals, variable argument handling, buffer optimization, and system calls.
+
