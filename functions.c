@@ -46,21 +46,30 @@ int print_number(long n)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags)
+int print_int(va_list args, int flags, int length )
 {
-    long n = va_arg(args, int);
+   long n;
     int count = 0;
 
-    /* added this to the function to handle flags to solve task 8*/
+    /* Handle different length modifiers */
+    if (length == LENGTH_L)
+        n = va_arg(args, long);
+    else if (length == LENGTH_H)
+        n = (short)va_arg(args, int);
+    else
+        n = va_arg(args, int);
+
+    /* Handle flags */
     if (n >= 0)
     {
-        if (flags & 1)       /* this flag is + flag */
+        if (flags & 1)       /* + flag */
             count += _putchar('+');
-        else if (flags & 2)  /* and this a space flag */
+        else if (flags & 2)  /* space flag */
             count += _putchar(' ');
     }
 
     return (count + print_number(n));
+}
 }
  
 /**
@@ -97,10 +106,19 @@ int print_int(va_list args, int flags)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_unsigned(va_list args, int flags)
+int print_unsigned(va_list args, int flags ,int length)
 {
-    unsigned int n = va_arg(args, unsigned int);
-    (void)flags; /* this becuase flags dosent change on u*/
+    unsigned long n;
+
+    /* Handle different length modifiers */
+    if (length == LENGTH_L)
+        n = va_arg(args, unsigned long);
+    else if (length == LENGTH_H)
+        n = (unsigned short)va_arg(args, unsigned int);
+    else
+        n = va_arg(args, unsigned int);
+
+    (void)flags; /* flags don't change for u*/
     return (print_unsigned_number(n));
 }
 
@@ -109,12 +127,20 @@ int print_unsigned(va_list args, int flags)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_octal(va_list args, int flags)
+int print_octal(va_list args, int flags , int length) 
 {
-    unsigned int n = va_arg(args, unsigned int);
+  unsigned long n;
     int count = 0;
 
-    /* this to Handle # flag and print 0 if number is not zero */
+    /* Handle different length modifiers */
+    if (length == LENGTH_L)
+        n = va_arg(args, unsigned long);
+    else if (length == LENGTH_H)
+        n = (unsigned short)va_arg(args, unsigned int);
+    else
+        n = va_arg(args, unsigned int);
+
+    /* Handle # flag */
     if ((flags & 4) && n != 0)
         count += _putchar('0');
 
@@ -127,15 +153,24 @@ int print_octal(va_list args, int flags)
  * @uppercase: 1 for uppercase, 0 for lowercase
  * Return: number of characters printed
  */
-int print_hex(va_list args, int uppercase, int flags)
+int print_hex(va_list args, int uppercase, int flags , int length )
 {
-    unsigned int n = va_arg(args, unsigned int);
+   unsigned long n;
     int count = 0;
-    /* and this like the before*/
+
+    /* Handle different length modifiers */
+    if (length == LENGTH_L)
+        n = va_arg(args, unsigned long);
+    else if (length == LENGTH_H)
+        n = (unsigned short)va_arg(args, unsigned int);
+    else
+        n = va_arg(args, unsigned int);
+
+    /* Handle # flag */
     if ((flags & 4) && n != 0)
     {
-    count += _putchar('0');
-    count += _putchar(uppercase ? 'X' : 'x'); /* this to handle the case*/
+        count += _putchar('0');
+        count += _putchar(uppercase ? 'X' : 'x');
     }
 
     return (count + print_hex_number(n, uppercase));
