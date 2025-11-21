@@ -17,7 +17,7 @@ int print_octal(va_list args, int flags, int length);
 int print_hex(va_list args, int uppercase, int flags, int length);
 int print_unsigned_number(unsigned long n);
 int print_octal_number(unsigned long n);
-int print_hex_number(unsigned int n, int uppercase);
+int print_hex_number(unsigned long n, int uppercase);
 int print_string_escaped(va_list args);
 int print_pointer(va_list args);
 

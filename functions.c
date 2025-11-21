@@ -179,11 +179,13 @@ int print_octal(va_list args, int flags, int length)
  * print_hex - prints hexadecimal numbers
  * @args: variadic list
  * @uppercase: 1 for uppercase, 0 for lowercase
+ * @flags: format flags
+ * @length: length modifier
  * Return: number of characters printed
  */
-int print_hex(va_list args, int uppercase, int flags , int length )
+int print_hex(va_list args, int uppercase, int flags, int length)
 {
-   unsigned long n;
+    unsigned long n;
     int count = 0;
 
     /* Handle different length modifiers */
@@ -274,23 +276,34 @@ int print_octal_number(unsigned long n)
  * @uppercase: 1 for uppercase, 0 for lowercase
  * Return: number of characters printed
  */
-int print_hex_number(unsigned int  n, int uppercase)
+/**
+ * print_hex_number - converts to hex and prints
+ * @n: unsigned long integer
+ * @uppercase: 1 for uppercase, 0 for lowercase
+ * Return: number of characters printed
+ */
+int print_hex_number(unsigned long n, int uppercase)
 {
     int count = 0;
-    char buffer[9];
+    char buffer[17]; /* 16 hex digits for 64-bit + null terminator */
     int i = 0;
     char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
 
     if (n == 0)
         return _putchar('0');
 
+    /* Build hexadecimal string in reverse */
     while (n > 0)
     {
         buffer[i] = digits[n % 16];
         n = n / 16;
         i++;
+        
+        /* Safety check - should never exceed 16 for 64-bit */
+        if (i >= 16) break;
     }
 
+    /* Print in correct order */
     while (i > 0)
     {
         count += _putchar(buffer[i - 1]);
