@@ -85,6 +85,7 @@ if (format[*i] == 'l' || format[*i] == 'h')
         if (flags & 4) count_chars += _putchar('#');
         return count_chars;
     }
+}
 
 if (!format[*i] && flags)  
 {
@@ -95,7 +96,6 @@ if (!format[*i] && flags)
     (*i)--;
     return count_chars;
 }
-
 
 if ((flags & 1) && (flags & 2)) /* if plus flag and space flag combine*/
 {
