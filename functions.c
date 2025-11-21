@@ -126,16 +126,17 @@ int print_int(va_list args, int flags, int length)
 
     return count;
 }
+
 /**
  * print_unsigned - prints unsigned integers
  * @args: variadic list
+ * @flags: format flags  
+ * @length: length modifier
  * Return: number of characters printed
  */
-int print_unsigned(va_list args, int flags ,int length)
+int print_unsigned(va_list args, int flags, int length)
 {
     unsigned long n;
-
-    /* Handle different length modifiers */
     if (length == LENGTH_L)
         n = va_arg(args, unsigned long);
     else if (length == LENGTH_H)
@@ -143,7 +144,7 @@ int print_unsigned(va_list args, int flags ,int length)
     else
         n = va_arg(args, unsigned int);
 
-    (void)flags; /* flags don't change for u*/
+    (void)flags;
     return (print_unsigned_number(n));
 }
 
