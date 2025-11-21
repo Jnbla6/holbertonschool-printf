@@ -405,44 +405,4 @@ int print_pointer(va_list args)
 
     return (count);
 }
-/**
- * print_padding - prints padding characters
- * @count: number of padding characters to print
- * @pad_char: character to use for padding
- * Return: number of characters printed
- */
-int print_padding(int count, char pad_char)
-{
-    int i, printed = 0;
-    for (i = 0; i < count; i++)
-        printed += _putchar(pad_char);
-    return printed;
-}
 
-/**
- * apply_field_width - applies field width formatting to numbers
- * @num_str: string representation of the number
- * @field_width: minimum field width
- * @flags: formatting flags
- * @is_negative: 1 if number is negative, 0 otherwise
- * Return: number of characters printed
- */
-int apply_field_width(char *num_str, int field_width, int flags, int is_negative)
-{
-    int len = strlen(num_str);
-    int total_printed = 0;
-    int padding = field_width - len;
-
-    if (is_negative)
-        padding--;  // Account for minus sign
-
-    if (padding > 0) {
-        total_printed += print_padding(padding, ' ');
-    }
-
-    if (is_negative)
-        total_printed += _putchar('-');
-
-    total_printed += print_string(num_str);
-    return total_printed;
-}
