@@ -132,11 +132,11 @@ return (count_chars);
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
-        return (print_unsigned(cart, flags, length,, field_width) );
+        return (print_unsigned(cart, flags, length, field_width) );
     if (format[*i] == 'o')
         return (print_octal(cart, flags ,length, , field_width));
     if (format[*i] == 'x')
-        return (print_hex(cart, 0, flags, length,, field_width));
+        return (print_hex(cart, 0, flags, length, field_width));
     if (format[*i] == 'X')
         return (print_hex(cart, 1, flags, length,field_width) );
     if (format[*i] == 'S')
