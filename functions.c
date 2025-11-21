@@ -207,15 +207,32 @@ int print_hex(va_list args, int uppercase, int flags , int length )
  * @n: unsigned number
  * Return: count of characters
  */
-int print_unsigned_number(unsigned int  n)
+/**
+ * print_unsigned_number - iterative function for unsigned numbers
+ * @n: unsigned long number
+ * Return: count of characters
+ */
+int print_unsigned_number(unsigned long n)
 {
     int count = 0;
+    char buffer[21];
+    int i = 0;
 
-    if (n / 10)
-        count += print_unsigned_number(n / 10);
+    if (n == 0)
+        return _putchar('0');
 
-    count += _putchar((n % 10) + '0');
-    return (count);
+    while (n > 0)
+    {
+        buffer[i++] = (n % 10) + '0';
+        n /= 10;
+    }
+
+    while (i > 0)
+    {
+        count += _putchar(buffer[--i]);
+    }
+
+    return count;
 }
 
 /**
