@@ -138,7 +138,7 @@ if (format[*i] == 'b')
     if (format[*i] == 'x')
         return (print_hex(cart, 0, flags, length,, field_width));
     if (format[*i] == 'X')
-        return (print_hex(cart, 1, flags, length,, field_width) );
+        return (print_hex(cart, 1, flags, length,field_width) );
     if (format[*i] == 'S')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
