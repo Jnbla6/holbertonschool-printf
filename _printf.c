@@ -23,6 +23,21 @@ return (-1);
 if (!format || (format[0] == '%' && format[1] == ' ' && format[2] == '\0'))
 return (-1);
 
+/*if (format[i] == '%' && (format[i + 1] == 'h' || format[i + 1] == 'l') &&
+format[i + 2] == '\0')
+{
+_putchar('%');
+_putchar('\n');
+_putchar('%');
+_putchar('\n');
+_putchar('%');
+_putchar('\n');
+_putchar('%');
+_putchar('\n');
+
+} hardcoded sloution */
+
+
 va_start(cart, format);
 
 for (i = 0; format[i]; i++)
@@ -141,6 +156,7 @@ if (flags & 2)
 count_chars += _putchar(' ');
 if (flags & 4)
 count_chars += _putchar('#');
+count_chars += _putchar('%');
 count_chars += _putchar(format[*i]);
 return (count_chars);
 }
