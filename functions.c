@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include <limits.h>
 /**
  * print_string - prints a string
  * @s: variadic list
@@ -23,20 +23,30 @@ return (len);
  * @n: long number
  * Return: count of characters
  */
+/**
+ * print_number - recursive function to print numbers
+ * @n: long number
+ * Return: count of characters
+ */
 int print_number(long n)
 {
     int count = 0;
+    unsigned long num;
 
     if (n < 0)
     {
         count += _putchar('-');
-        n = -n;
+        num = (n == LONG_MIN) ? (unsigned long)LONG_MAX + 1 : (unsigned long)(-n);
+    }
+    else
+    {
+        num = n;
     }
 
-    if (n / 10)
-        count += print_number(n / 10);
+    if (num / 10)
+        count += print_number(num / 10);
 
-    count += _putchar((n % 10) + '0');
+    count += _putchar((num % 10) + '0');
 
     return (count);
 }
