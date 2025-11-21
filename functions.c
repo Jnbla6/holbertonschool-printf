@@ -23,28 +23,24 @@ return (len);
  * @n: long number
  * Return: count of characters
  */
-int print_number(long n)
+      	int print_number(long n)
 {
     int count = 0;
-    unsigned long num;
 
     if (n < 0)
     {
         count += _putchar('-');
-        num = (n == LONG_MIN) ? (unsigned long)LONG_MAX + 1 : (unsigned long)(-n);
-    }
-    else
-    {
-        num = n;
+        n = -n;
     }
 
-    if (num / 10)
-        count += print_number(num / 10);
+    if (n / 10)
+        count += print_number(n / 10);
 
-    count += _putchar((num % 10) + '0');
+    count += _putchar((n % 10) + '0');
 
     return (count);
-}
+}         
+
 
 /**
  * print_int - prints integers %d %i
@@ -185,7 +181,7 @@ int print_hex(va_list args, int uppercase, int flags , int length )
  * @n: unsigned number
  * Return: count of characters
  */
-int print_unsigned_number(unsigned long  n)
+int print_unsigned_number(unsigned int  n)
 {
     int count = 0;
 
@@ -201,7 +197,7 @@ int print_unsigned_number(unsigned long  n)
  * @n: unsigned integer
  * Return: number of characters printed
  */
-int print_octal_number(unsigned long  n)
+int print_octal_number(unsigned int  n)
 {
     int count = 0;
     char buffer[12];
@@ -231,7 +227,7 @@ int print_octal_number(unsigned long  n)
  * @uppercase: 1 for uppercase, 0 for lowercase
  * Return: number of characters printed
  */
-int print_hex_number(unsigned long  n, int uppercase)
+int print_hex_number(unsigned int  n, int uppercase)
 {
     int count = 0;
     char buffer[9];
