@@ -5,21 +5,13 @@
  * @s: variadic list
  * Return: number of characters printed
  */
-int print_string(char *s, int field_width )
+int print_string(char *s)
 {
 int len = 0;
 int i;
-int padding;
 
 if (!s)
 s = "(null)";
-
-/* Calculate padding */
-    padding = field_width - strlen(s);
-    if (padding > 0) {
-        for (i = 0; i < padding; i++)
-            len += _putchar(' ');
-    }
 
 for (i = 0; s[i] != '\0'; i++)
 {
@@ -82,7 +74,7 @@ int print_number(long n)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags, int length,int field_width)
+int print_int(va_list args, int flags, int length)
 {
     long n;
     int count = 0;
