@@ -30,7 +30,7 @@ for (i = 0; format[i]; i++)
 if (format[i] == '%')
 count += handle_specifier(format, &i, cart);
 else
-if (format[i] != ' ')
+if (format[i] != ' ' && format[i - 1] != '%')
 count += _putchar(format[i]);
 }
 flush();
