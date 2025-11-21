@@ -151,11 +151,13 @@ int print_unsigned(va_list args, int flags, int length)
 /**
  * print_octal - prints octal numbers
  * @args: variadic list
+ * @flags: format flags
+ * @length: length modifier
  * Return: number of characters printed
  */
-int print_octal(va_list args, int flags , int length) 
+int print_octal(va_list args, int flags, int length) 
 {
-  unsigned long n;
+    unsigned long n;
     int count = 0;
 
     /* Handle different length modifiers */
@@ -166,7 +168,7 @@ int print_octal(va_list args, int flags , int length)
     else
         n = va_arg(args, unsigned int);
 
-    /* Handle # flag */
+    /* Handle # flag - only add '0' if number is not zero */
     if ((flags & 4) && n != 0)
         count += _putchar('0');
 
@@ -237,18 +239,19 @@ int print_unsigned_number(unsigned long n)
 
 /**
  * print_octal_number - converts to octal and prints
- * @n: unsigned integer
+ * @n: unsigned long integer
  * Return: number of characters printed
  */
-int print_octal_number(unsigned int  n)
+int print_octal_number(unsigned long n)
 {
     int count = 0;
-    char buffer[12];
+    char buffer[23]; /* 22 digits for ULONG_MAX in octal + null terminator */
     int i = 0;
 
     if (n == 0)
         return _putchar('0');
 
+    /* Build octal string in reverse */
     while (n > 0)
     {
         buffer[i] = (n % 8) + '0';
@@ -256,6 +259,7 @@ int print_octal_number(unsigned int  n)
         i++;
     }
 
+    /* Print in correct order */
     while (i > 0)
     {
         count += _putchar(buffer[i - 1]);
