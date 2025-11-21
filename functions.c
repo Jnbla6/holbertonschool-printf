@@ -339,4 +339,3 @@ int print_pointer(va_list args)
 
     return (count);
 }
- }
