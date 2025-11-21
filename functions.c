@@ -19,27 +19,52 @@ return (len);
 }
 
 /**
- * print_number - recursive function to print numbers
+ * print_number - iterative function to print numbers
  * @n: long number
  * Return: count of characters
  */
-      	int print_number(long n)
+int print_number(long n)
 {
     int count = 0;
+    char buffer[21];
+    int i = 0;
+    unsigned long num;
 
     if (n < 0)
     {
         count += _putchar('-');
-        n = -n;
+        if (n == LONG_MIN)
+        {
+            num = (unsigned long)LONG_MAX + 1;
+        }
+        else
+        {
+            num = (unsigned long)(-n);
+        }
+    }
+    else
+    {
+        num = (unsigned long)n;
     }
 
-    if (n / 10)
-        count += print_number(n / 10);
+    if (num == 0)
+    {
+        return count + _putchar('0');
+    }
 
-    count += _putchar((n % 10) + '0');
+    while (num > 0)
+    {
+        buffer[i++] = (num % 10) + '0';
+        num /= 10;
+    }
 
-    return (count);
-}         
+    while (i > 0)
+    {
+        count += _putchar(buffer[--i]);
+    }
+
+    return count;
+}       
 
 
 /**
