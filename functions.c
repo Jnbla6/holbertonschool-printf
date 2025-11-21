@@ -46,9 +46,9 @@ int print_number(long n)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags, int length )
+int print_int(va_list args, int flags, int length)
 {
-   long n;
+    long n;
     int count = 0;
 
     /* Handle different length modifiers */
@@ -69,7 +69,6 @@ int print_int(va_list args, int flags, int length )
     }
 
     return (count + print_number(n));
-}
 }
  
 /**
