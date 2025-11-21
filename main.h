@@ -10,11 +10,11 @@ int _printf(const char *format, ...);
 
 /* Print functions */
 int print_string(char *s);
-int print_int(va_list args, int flags);
+int print_int(va_list args, int flags, int length);
 int print_binary(unsigned int n);
-int print_unsigned(va_list args, int flags);
-int print_octal(va_list args, int flags);
-int print_hex(va_list args, int uppercase, int flags);
+int print_unsigned(va_list args, int flags, int length);
+int print_octal(va_list args, int flags, int length);
+int print_hex(va_list args, int uppercase, int flags, int length);
 int print_unsigned_number(unsigned int n);
 int print_octal_number(unsigned int n);
 int print_hex_number(unsigned int n, int uppercase);
@@ -34,4 +34,4 @@ int buffer_char(char c);
 #define LENGTH_L 1
 #define LENGTH_H 2
 
-#endif 
+#endif
