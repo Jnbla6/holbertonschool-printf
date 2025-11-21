@@ -29,4 +29,9 @@ int print_number(long n);
 void flush(void);
 int buffer_char(char c);
 
+/* Length modifier constants */
+#define LENGTH_NONE 0
+#define LENGTH_L 1
+#define LENGTH_H 2
+
 #endif 
