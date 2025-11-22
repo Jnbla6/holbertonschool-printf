@@ -74,7 +74,7 @@ int print_number(long n)
  * @args: variadic list
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags, int length,int field_width )
+int print_int(va_list args, int flags, int length )
 {
     long n;
     int count = 0;
@@ -95,26 +95,10 @@ int print_int(va_list args, int flags, int length,int field_width )
         else if (flags & 2)  /* space flag */
             count += _putchar(' ');
     }
-/*FIELD WIDTH CODE*/
- if (field_width > 0) {
-        char buffer[21];
-        int len = 0;
-        long temp = (n < 0) ? -n : n;
-        
-        if (temp == 0) len = 1;
-        while (temp > 0) { len++; temp /= 10; }
-        if (n < 0 || (n >= 0 && (flags & 1 || flags & 2))) len++;
-        
-        if (field_width > len) {
-            for (int i = 0; i < field_width - len; i++)
-                count += _putchar(' ');
-        }
-    }
-
-
 
     return (count + print_number(n));
 }
+
  
 /**
  * print_binary - converts unsigned int to binary and prints it
