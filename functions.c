@@ -2,12 +2,13 @@
 #include <limits.h>
 
 /**
- * print_string - prints a string with field width
+ * print_string - prints a string with width and precision
  * @s: string to print
  * @width: field width
+ * @precision: max characters to print (-1 for unlimited)
  * Return: number of characters printed
  */
-int print_string(char *s, int width)
+int print_string(char *s, int width, int precision)
 {
 	int len = 0;
 	int i;
@@ -19,13 +20,16 @@ int print_string(char *s, int width)
 	for (len = 0; s[len] != '\0'; len++)
 		;
 
+	if (precision >= 0 && precision < len)
+		len = precision;
+
 	while (width > len)
 	{
 		count += _putchar(' ');
 		width--;
 	}
 
-	for (i = 0; s[i] != '\0'; i++)
+	for (i = 0; i < len; i++)
 	{
 		count += _putchar(s[i]);
 	}
@@ -33,7 +37,7 @@ int print_string(char *s, int width)
 }
 
 /**
- * print_number - iterative function to print numbers (legacy helper)
+ * print_number - iterative function to print numbers
  * @n: long number
  * Return: count of characters
  */
@@ -73,78 +77,78 @@ int print_number(long n)
 }
 
 /**
- * print_int - prints integers %d %i with width
- * @args: variadic list
+ * print_int - prints integers with width and precision
+ * @args: arguments
  * @flags: flags
  * @length: length modifier
  * @width: field width
+ * @precision: min digits to print
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags, int length, int width)
+int print_int(va_list args, int flags, int length, int width, int precision)
 {
 	long n;
 	unsigned long num;
-	int count = 0;
-	int len = 0;
-	int sign_char = 0; /* 0: none, 1: +, 2: space, 3: - */
+	int count = 0, len = 0, zeros = 0, total_len = 0;
+	int sign = 0; /* 0: none, 1: +, 2: space, 3: - */
 	unsigned long temp;
 
-	/* Handle different length modifiers */
-	if (length == LENGTH_L)
-		n = va_arg(args, long);
-	else if (length == LENGTH_H)
-		n = (short)va_arg(args, int);
-	else
-		n = va_arg(args, int);
+	if (length == LENGTH_L) n = va_arg(args, long);
+	else if (length == LENGTH_H) n = (short)va_arg(args, int);
+	else n = va_arg(args, int);
 
-	/* Determine sign and absolute value */
 	if (n < 0)
 	{
-		sign_char = 3;
+		sign = 3;
 		num = (n == LONG_MIN) ? ((unsigned long)LONG_MAX + 1) : (unsigned long)(-n);
 	}
 	else
 	{
 		num = (unsigned long)n;
-		if (flags & 1) sign_char = 1;
-		else if (flags & 2) sign_char = 2;
+		if (flags & 1) sign = 1;
+		else if (flags & 2) sign = 2;
 	}
 
-	/* Calculate number length */
-	temp = num;
-	len = (temp == 0) ? 1 : 0;
-	while (temp > 0)
+	if (num == 0 && precision == 0)
+		len = 0; /* Special case: print nothing */
+	else
 	{
-		temp /= 10;
-		len++;
+		temp = num;
+		len = (temp == 0) ? 1 : 0;
+		while (temp > 0) { temp /= 10; len++; }
 	}
 
-	/* Add sign length */
-	if (sign_char != 0)
-		len++;
+	if (precision > len)
+		zeros = precision - len;
 
-	/* Print padding */
-	while (width > len)
+	total_len = len + zeros + (sign ? 1 : 0);
+
+	while (width > total_len)
 	{
 		count += _putchar(' ');
 		width--;
 	}
 
-	/* Print sign */
-	if (sign_char == 3) count += _putchar('-');
-	else if (sign_char == 1) count += _putchar('+');
-	else if (sign_char == 2) count += _putchar(' ');
+	if (sign == 3) count += _putchar('-');
+	else if (sign == 1) count += _putchar('+');
+	else if (sign == 2) count += _putchar(' ');
 
-	/* Print number */
-	count += print_unsigned_number(num);
+	while (zeros > 0)
+	{
+		count += _putchar('0');
+		zeros--;
+	}
+
+	if (len > 0)
+		count += print_unsigned_number(num);
 
 	return (count);
 }
 
 /**
- * print_binary - converts unsigned int to binary and prints it
- * @n: unsigned integer to convert
- * Return: number of characters printed
+ * print_binary - converts unsigned int to binary
+ * @n: number
+ * Return: count
  */
 int print_binary(unsigned int n)
 {
@@ -152,178 +156,150 @@ int print_binary(unsigned int n)
 	char buffer[33];
 	int i = 0;
 
-	if (n == 0)
-		return _putchar('0');
+	if (n == 0) return _putchar('0');
 
 	while (n > 0)
 	{
-		buffer[i] = (n % 2) + '0';
-		n = n / 2;
-		i++;
+		buffer[i++] = (n % 2) + '0';
+		n /= 2;
 	}
-
-	while (i > 0)
-	{
-		count += _putchar(buffer[i - 1]);
-		i--;
-	}
+	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
 
 /**
- * print_unsigned - prints unsigned integers with width
- * @args: variadic list
- * @flags: format flags
- * @length: length modifier
- * @width: field width
- * Return: number of characters printed
+ * print_unsigned - prints unsigned int with width/precision
  */
-int print_unsigned(va_list args, int flags, int length, int width)
+int print_unsigned(va_list args, int flags, int length, int width, int precision)
 {
-	unsigned long n;
-	unsigned long temp;
-	int len = 0;
-	int count = 0;
+	unsigned long n, temp;
+	int len = 0, zeros = 0, count = 0, total_len;
 
-	if (length == LENGTH_L)
-		n = va_arg(args, unsigned long);
-	else if (length == LENGTH_H)
-		n = (unsigned short)va_arg(args, unsigned int);
-	else
-		n = va_arg(args, unsigned int);
+	if (length == LENGTH_L) n = va_arg(args, unsigned long);
+	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
+	else n = va_arg(args, unsigned int);
 
 	(void)flags;
 
-	/* Calculate length */
-	temp = n;
-	len = (temp == 0) ? 1 : 0;
-	while (temp > 0)
-	{
-		temp /= 10;
-		len++;
-	}
-
-	/* Print padding */
-	while (width > len)
-	{
-		count += _putchar(' ');
-		width--;
-	}
-
-	count += print_unsigned_number(n);
-	return (count);
-}
-
-/**
- * print_octal - prints octal numbers with width
- * @args: variadic list
- * @flags: format flags
- * @length: length modifier
- * @width: field width
- * Return: number of characters printed
- */
-int print_octal(va_list args, int flags, int length, int width)
-{
-	unsigned long n;
-	unsigned long temp;
-	int len = 0;
-	int count = 0;
-	int prefix = 0;
-
-	if (length == LENGTH_L)
-		n = va_arg(args, unsigned long);
-	else if (length == LENGTH_H)
-		n = (unsigned short)va_arg(args, unsigned int);
+	if (n == 0 && precision == 0) len = 0;
 	else
-		n = va_arg(args, unsigned int);
-
-	/* Check for prefix (# flag) */
-	if ((flags & 4) && n != 0)
-		prefix = 1;
-
-	/* Calculate length */
-	temp = n;
-	len = (temp == 0) ? 1 : 0;
-	while (temp > 0)
 	{
-		temp /= 8;
-		len++;
+		temp = n;
+		len = (temp == 0) ? 1 : 0;
+		while (temp > 0) { temp /= 10; len++; }
 	}
-	len += prefix;
 
-	/* Print padding */
-	while (width > len)
+	if (precision > len) zeros = precision - len;
+	total_len = len + zeros;
+
+	while (width > total_len)
 	{
 		count += _putchar(' ');
 		width--;
 	}
-
-	if (prefix)
+	while (zeros > 0)
+	{
 		count += _putchar('0');
-
-	count += print_octal_number(n);
+		zeros--;
+	}
+	if (len > 0) count += print_unsigned_number(n);
 	return (count);
 }
 
 /**
- * print_hex - prints hexadecimal numbers with width
- * @args: variadic list
- * @uppercase: 1 for uppercase, 0 for lowercase
- * @flags: format flags
- * @length: length modifier
- * @width: field width
- * Return: number of characters printed
+ * print_octal - prints octal with width/precision
  */
-int print_hex(va_list args, int uppercase, int flags, int length, int width)
+int print_octal(va_list args, int flags, int length, int width, int precision)
 {
-	unsigned long n;
-	unsigned long temp;
-	int len = 0;
-	int count = 0;
-	int prefix = 0;
+	unsigned long n, temp;
+	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
 
-	if (length == LENGTH_L)
-		n = va_arg(args, unsigned long);
-	else if (length == LENGTH_H)
-		n = (unsigned short)va_arg(args, unsigned int);
+	if (length == LENGTH_L) n = va_arg(args, unsigned long);
+	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
+	else n = va_arg(args, unsigned int);
+
+	if ((flags & 4) && n != 0) prefix = 1; /* # flag adds 0 */
+
+	if (n == 0 && precision == 0) len = 0;
 	else
-		n = va_arg(args, unsigned int);
-
-	/* Check for prefix (# flag) */
-	if ((flags & 4) && n != 0)
-		prefix = 2; /* 0x or 0X */
-
-	/* Calculate length */
-	temp = n;
-	len = (temp == 0) ? 1 : 0;
-	while (temp > 0)
 	{
-		temp /= 16;
-		len++;
+		temp = n;
+		len = (temp == 0) ? 1 : 0;
+		while (temp > 0) { temp /= 8; len++; }
 	}
-	len += prefix;
 
-	/* Print padding */
-	while (width > len)
+	if (precision > len) zeros = precision - len;
+	
+	/* # flag for octal guarantees a leading zero. 
+	 * If precision already added zeros, we don't add another one.
+	 * If prefix needed and no zeros added by precision, we add 1 to length (or zeros)
+	 */
+	if (prefix && zeros == 0) zeros = 1;
+
+	total_len = len + zeros;
+
+	while (width > total_len)
 	{
 		count += _putchar(' ');
 		width--;
 	}
+	while (zeros > 0)
+	{
+		count += _putchar('0');
+		zeros--;
+	}
+	if (len > 0) count += print_octal_number(n);
+	return (count);
+}
 
+/**
+ * print_hex - prints hex with width/precision
+ */
+int print_hex(va_list args, int uppercase, int flags, int length, int width, int precision)
+{
+	unsigned long n, temp;
+	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
+
+	if (length == LENGTH_L) n = va_arg(args, unsigned long);
+	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
+	else n = va_arg(args, unsigned int);
+
+	if ((flags & 4) && n != 0) prefix = 2; /* 0x */
+
+	if (n == 0 && precision == 0) len = 0;
+	else
+	{
+		temp = n;
+		len = (temp == 0) ? 1 : 0;
+		while (temp > 0) { temp /= 16; len++; }
+	}
+
+	if (precision > len) zeros = precision - len;
+	total_len = len + zeros + prefix;
+
+	while (width > total_len)
+	{
+		count += _putchar(' ');
+		width--;
+	}
+	
 	if (prefix)
 	{
 		count += _putchar('0');
 		count += _putchar(uppercase ? 'X' : 'x');
 	}
 
-	count += print_hex_number(n, uppercase);
+	while (zeros > 0)
+	{
+		count += _putchar('0');
+		zeros--;
+	}
+	if (len > 0) count += print_hex_number(n, uppercase);
 	return (count);
 }
 
 /**
- * print_unsigned_number - iterative function for unsigned numbers
- * @n: unsigned long number
- * Return: count of characters
+ * print_unsigned_number - prints unsigned long
  */
 int print_unsigned_number(unsigned long n)
 {
@@ -331,25 +307,19 @@ int print_unsigned_number(unsigned long n)
 	char buffer[21];
 	int i = 0;
 
-	if (n == 0)
-		return _putchar('0');
+	if (n == 0) return _putchar('0');
 
 	while (n > 0)
 	{
 		buffer[i++] = (n % 10) + '0';
 		n /= 10;
 	}
-
-	while (i > 0)
-		count += _putchar(buffer[--i]);
-
+	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
 
 /**
- * print_octal_number - converts to octal and prints
- * @n: unsigned long integer
- * Return: number of characters printed
+ * print_octal_number - prints octal
  */
 int print_octal_number(unsigned long n)
 {
@@ -357,25 +327,19 @@ int print_octal_number(unsigned long n)
 	char buffer[23];
 	int i = 0;
 
-	if (n == 0)
-		return _putchar('0');
+	if (n == 0) return _putchar('0');
 
 	while (n > 0)
 	{
 		buffer[i++] = (n % 8) + '0';
-		n = n / 8;
+		n /= 8;
 	}
-
-	while (i > 0)
-		count += _putchar(buffer[--i]);
+	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
 
 /**
- * print_hex_number - converts to hex and prints
- * @n: unsigned long integer
- * @uppercase: 1 for uppercase, 0 for lowercase
- * Return: number of characters printed
+ * print_hex_number - prints hex
  */
 int print_hex_number(unsigned long n, int uppercase)
 {
@@ -384,24 +348,19 @@ int print_hex_number(unsigned long n, int uppercase)
 	int i = 0;
 	char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
 
-	if (n == 0)
-		return _putchar('0');
+	if (n == 0) return _putchar('0');
 
 	while (n > 0)
 	{
 		buffer[i++] = digits[n % 16];
-		n = n / 16;
+		n /= 16;
 	}
-
-	while (i > 0)
-		count += _putchar(buffer[--i]);
+	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
 
 /**
- * print_string_escaped - prints string with non-printable chars
- * @args: variadic arguments
- * Return: number of characters printed
+ * print_string_escaped - prints escaped string
  */
 int print_string_escaped(va_list args)
 {
@@ -409,8 +368,7 @@ int print_string_escaped(va_list args)
 	int count = 0, i;
 	char hex_digits[] = "0123456789ABCDEF";
 
-	if (!s)
-		s = "(null)";
+	if (!s) s = "(null)";
 
 	for (i = 0; s[i]; i++)
 	{
@@ -421,50 +379,33 @@ int print_string_escaped(va_list args)
 			count += _putchar(hex_digits[(unsigned char)s[i] / 16]);
 			count += _putchar(hex_digits[(unsigned char)s[i] % 16]);
 		}
-		else
-		{
-			count += _putchar(s[i]);
-		}
+		else count += _putchar(s[i]);
 	}
 	return (count);
 }
 
 /**
- * print_pointer - prints pointer address with width
- * @args: variadic arguments
- * @width: field width
- * Return: number of characters printed
+ * print_pointer - prints pointer
  */
 int print_pointer(va_list args, int width)
 {
 	void *ptr = va_arg(args, void *);
 	unsigned long address;
 	char buffer[20];
-	int i = 0, count = 0, len = 0;
+	int i = 0, count = 0, len = 2; /* 0x */
 	char hex_digits[] = "0123456789abcdef";
 
-	if (ptr == NULL)
-	{
-		char *s = "(nil)";
-		return print_string(s, width);
-	}
+	if (ptr == NULL) return print_string("(nil)", width, -1);
 
 	address = (unsigned long)ptr;
 	
-	/* Calculate length */
-	len = 2; /* "0x" */
 	if (address == 0) len++;
 	else
 	{
 		unsigned long temp = address;
-		while (temp > 0)
-		{
-			temp /= 16;
-			len++;
-		}
+		while (temp > 0) { temp /= 16; len++; }
 	}
 
-	/* Print padding */
 	while (width > len)
 	{
 		count += _putchar(' ');
@@ -474,20 +415,15 @@ int print_pointer(va_list args, int width)
 	count += _putchar('0');
 	count += _putchar('x');
 
-	if (address == 0)
+	if (address == 0) count += _putchar('0');
+	else
 	{
-		count += _putchar('0');
-		return (count);
+		while (address > 0)
+		{
+			buffer[i++] = hex_digits[address % 16];
+			address /= 16;
+		}
+		while (i > 0) count += _putchar(buffer[--i]);
 	}
-
-	while (address > 0)
-	{
-		buffer[i++] = hex_digits[address % 16];
-		address /= 16;
-	}
-
-	while (i > 0)
-		count += _putchar(buffer[--i]);
-
 	return (count);
 }
