@@ -128,7 +128,7 @@ count_chars += _putchar(' ');
 return (count_chars);
 } 
  if (format[*i] == 'd' || format[*i] == 'i')
-        return (print_int(cart, flags, length,field_width ));
+        return (print_int(cart, flags, length));
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
