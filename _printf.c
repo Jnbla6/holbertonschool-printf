@@ -57,7 +57,7 @@ char c;
 int count_chars =0;
 int flags = 0;
 int length = LENGTH_NONE;
- int field_width = 0;
+int field_width = 0;
 
 (*i)++;
 if (!format[*i])
@@ -73,6 +73,13 @@ if (!format[*i])
 break;
 } 
  /* Parse field width */
+if (format[*i] == '*')
+{
+field_width = va_arg(cart, int);
+(*i)++;
+}
+else
+{
     while (format[*i] >= '0' && format[*i] <= '9')
     {
         field_width = field_width * 10 + (format[*i] - '0');
@@ -80,6 +87,7 @@ break;
         if (!format[*i])
             break;
     }
+}
 /* Parse length modifiers */
 
 if (format[*i] == 'l' || format[*i] == 'h')
@@ -115,11 +123,16 @@ flags &= ~2;  /* and this for remove space flag */
 if (format[*i] == 'c')
 {
 c = va_arg(cart, int);
+while (field_width > 1)
+{
+count_chars += _putchar(' ');
+field_width--;
+}
 count_chars += _putchar(c);
 return (count_chars);
 }
 if (format[*i] == 's')
-return (print_string(va_arg(cart, char*)));
+return (print_string(va_arg(cart, char*), field_width));
 if (format[*i] == '%')
 {
 count_chars += _putchar('%');
@@ -128,21 +141,21 @@ count_chars += _putchar(' ');
 return (count_chars);
 } 
  if (format[*i] == 'd' || format[*i] == 'i')
-        return (print_int(cart, flags, length));
+        return (print_int(cart, flags, length, field_width));
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
-        return (print_unsigned(cart, flags, length));
+        return (print_unsigned(cart, flags, length, field_width));
     if (format[*i] == 'o')
-        return (print_octal(cart, flags ,length));
+        return (print_octal(cart, flags ,length, field_width));
     if (format[*i] == 'x')
-        return (print_hex(cart, 0, flags, length));
+        return (print_hex(cart, 0, flags, length, field_width));
     if (format[*i] == 'X')
-        return (print_hex(cart, 1, flags, length));
+        return (print_hex(cart, 1, flags, length, field_width));
     if (format[*i] == 'S')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
-    return (print_pointer(cart));
+    return (print_pointer(cart, field_width));
 
 if (flags & 1)
 count_chars += _putchar('+');
