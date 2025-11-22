@@ -59,19 +59,19 @@ int flags = 0;
 int length = LENGTH_NONE;
 int field_width = 0;
 int precision = -1;
-int zero_flag = 0;  /* zero flag */
+int left_justify = 0;  /* ADD THIS LINE */
 
 (*i)++;
 if (!format[*i])
 return (-1);
 
-/* ADD '0' TO FLAG DETECTION*/
-while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#' || format[*i] == '0')
+/* ADD '-' TO FLAG DETECTION */
+while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#' || format[*i] == '-')
 {
 if (format[*i] == '+') flags |= 1; /* flag for plus case*/
 if (format[*i] == ' ') flags |= 2; /* flag for space case*/
 if (format[*i] == '#') flags |= 4; /* flag for Hash case*/
-if (format[*i] == '0') zero_flag = 1;  /* ADD THIS LINE for zero flag */
+if (format[*i] == '-') left_justify = 1;  /* ADD THIS LINE */
 (*i)++;
 if (!format[*i])
 break;
@@ -156,7 +156,7 @@ count_chars += _putchar(c);
 return (count_chars);
 }
 if (format[*i] == 's')
-return (print_string(va_arg(cart, char*), field_width, precision));
+return (print_string(va_arg(cart, char*), field_width, precision, left_justify));  /* ADD left_justify */
 if (format[*i] == '%')
 {
 count_chars += _putchar('%');
@@ -165,17 +165,17 @@ count_chars += _putchar(' ');
 return (count_chars);
 } 
  if (format[*i] == 'd' || format[*i] == 'i')
-        return (print_int(cart, flags, length, field_width, precision, zero_flag));  /* ADD zero_flag*/
+        return (print_int(cart, flags, length, field_width, precision, left_justify));  /* ADD left_justify */
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
-        return (print_unsigned(cart, flags, length, field_width, precision, zero_flag));  /* ADD zero_flag*/
+        return (print_unsigned(cart, flags, length, field_width, precision, left_justify));  /* ADD left_justify */
     if (format[*i] == 'o')
-        return (print_octal(cart, flags ,length, field_width, precision, zero_flag));  /*ADD zero_flag*/
+        return (print_octal(cart, flags ,length, field_width, precision, left_justify));  /* ADD left_justify */
     if (format[*i] == 'x')
-        return (print_hex(cart, 0, flags, length, field_width, precision, zero_flag));  /* ADD zero_flag*/
+        return (print_hex(cart, 0, flags, length, field_width, precision, left_justify));  /* ADD left_justify */
     if (format[*i] == 'X')
-        return (print_hex(cart, 1, flags, length, field_width, precision, zero_flag));  /* ADD zero_flag*/
+        return (print_hex(cart, 1, flags, length, field_width, precision, left_justify));  /* ADD left_justify */
     if (format[*i] == 'S')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
