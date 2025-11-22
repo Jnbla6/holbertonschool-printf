@@ -404,28 +404,28 @@ int print_pointer(va_list args)
  * @field_width: field width
  * Return: number of characters printed
  */
-int print_string_width(char *s, int field_width)
+   int print_string_width(char *s, int field_width)
 {
     int len = 0;
     int i;
+    int j;
+    int count = 0;
 
     if (!s)
         s = "(null)";
 
-    // Calculate string length first
+    /* Calculate string length first */
     for (i = 0; s[i] != '\0'; i++)
         len++;
 
-    int count = 0;
-    
-    // Print padding if needed
+    /* Print padding if needed */
     if (field_width > len)
     {
-        for (int j = 0; j < field_width - len; j++)
+        for (j = 0; j < field_width - len; j++)
             count += _putchar(' ');
     }
 
-    // Print the actual string
+    /* Print the actual string */
     for (i = 0; s[i] != '\0'; i++)
         count += _putchar(s[i]);
 
