@@ -86,7 +86,7 @@ int print_number(long n)
  * @zero_flag: whether to use zero padding
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags, int length, int width, int precision, int zero_flag)  // ADD zero_flag parameter
+int print_int(va_list args, int flags, int length, int width, int precision, int zero_flag)  /* ADD zero_flag parameter */
 {
 	long n;
 	unsigned long num;
@@ -124,10 +124,10 @@ int print_int(va_list args, int flags, int length, int width, int precision, int
 
 	total_len = len + zeros + (sign ? 1 : 0);
 
-	// SIMPLE ZERO FLAG: Replace spaces with zeros
+	/* SIMPLE ZERO FLAG: Replace spaces with zeros */
 	while (width > total_len)
 	{
-		count += _putchar(zero_flag ? '0' : ' ');  // ADD zero_flag logic
+		count += _putchar(zero_flag ? '0' : ' ');  /* ADD zero_flag logic */
 		width--;
 	}
 
@@ -172,7 +172,7 @@ int print_binary(unsigned int n)
 /**
  * print_unsigned - prints unsigned int with width/precision
  */
-int print_unsigned(va_list args, int flags, int length, int width, int precision, int zero_flag)  // ADD zero_flag parameter
+int print_unsigned(va_list args, int flags, int length, int width, int precision, int zero_flag)  /* ADD zero_flag parameter */
 {
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len;
@@ -194,10 +194,10 @@ int print_unsigned(va_list args, int flags, int length, int width, int precision
 	if (precision > len) zeros = precision - len;
 	total_len = len + zeros;
 
-	// SIMPLE ZERO FLAG: Replace spaces with zeros
+	/* SIMPLE ZERO FLAG: Replace spaces with zeros */
 	while (width > total_len)
 	{
-		count += _putchar(zero_flag ? '0' : ' ');  // ADD zero_flag logic
+		count += _putchar(zero_flag ? '0' : ' ');  /* ADD zero_flag logic */
 		width--;
 	}
 	while (zeros > 0)
@@ -212,7 +212,7 @@ int print_unsigned(va_list args, int flags, int length, int width, int precision
 /**
  * print_octal - prints octal with width/precision
  */
-int print_octal(va_list args, int flags, int length, int width, int precision, int zero_flag)  // ADD zero_flag parameter
+int print_octal(va_list args, int flags, int length, int width, int precision, int zero_flag)  /* ADD zero_flag parameter */
 {
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
@@ -241,10 +241,10 @@ int print_octal(va_list args, int flags, int length, int width, int precision, i
 
 	total_len = len + zeros;
 
-	// SIMPLE ZERO FLAG: Replace spaces with zeros
+	/* SIMPLE ZERO FLAG: Replace spaces with zeros */
 	while (width > total_len)
 	{
-		count += _putchar(zero_flag ? '0' : ' ');  // ADD zero_flag logic
+		count += _putchar(zero_flag ? '0' : ' ');  /* ADD zero_flag logic */
 		width--;
 	}
 	while (zeros > 0)
@@ -259,7 +259,7 @@ int print_octal(va_list args, int flags, int length, int width, int precision, i
 /**
  * print_hex - prints hex with width/precision
  */
-int print_hex(va_list args, int uppercase, int flags, int length, int width, int precision, int zero_flag)  // ADD zero_flag parameter
+int print_hex(va_list args, int uppercase, int flags, int length, int width, int precision, int zero_flag)  /* ADD zero_flag parameter */
 {
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
@@ -281,10 +281,10 @@ int print_hex(va_list args, int uppercase, int flags, int length, int width, int
 	if (precision > len) zeros = precision - len;
 	total_len = len + zeros + prefix;
 
-	// SIMPLE ZERO FLAG: Replace spaces with zeros
+	/* SIMPLE ZERO FLAG: Replace spaces with zeros */
 	while (width > total_len)
 	{
-		count += _putchar(zero_flag ? '0' : ' ');  // ADD zero_flag logic
+		count += _putchar(zero_flag ? '0' : ' ');  /* ADD zero_flag logic */
 		width--;
 	}
 	
