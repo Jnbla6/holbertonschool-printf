@@ -119,7 +119,7 @@ count_chars += _putchar(c);
 return (count_chars);
 }
 if (format[*i] == 's')
-return (print_string(va_arg(cart, char*) , field_width));
+return (print_string(va_arg(cart, char*)));
 if (format[*i] == '%')
 {
 count_chars += _putchar('%');
@@ -128,17 +128,17 @@ count_chars += _putchar(' ');
 return (count_chars);
 } 
  if (format[*i] == 'd' || format[*i] == 'i')
-        return (print_int(cart, flags, length,field_width));
+        return (print_int(cart, flags, length));
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
-        return (print_unsigned(cart, flags, length, field_width) );
+        return (print_unsigned(cart, flags, length));
     if (format[*i] == 'o')
-        return (print_octal(cart, flags ,length, , field_width));
+        return (print_octal(cart, flags ,length));
     if (format[*i] == 'x')
-        return (print_hex(cart, 0, flags, length, field_width));
+        return (print_hex(cart, 0, flags, length));
     if (format[*i] == 'X')
-        return (print_hex(cart, 1, flags, length,field_width) );
+        return (print_hex(cart, 1, flags, length);
     if (format[*i] == 'S')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
