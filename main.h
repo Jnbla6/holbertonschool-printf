@@ -10,7 +10,7 @@ int _printf(const char *format, ...);
 
 /* Print functions */
 int print_string(char *s);
-int print_int(va_list args, int flags, int length,int field_width );
+int print_int(va_list args, int flags, int length );
 int print_binary(unsigned int n);
 int print_unsigned(va_list args, int flags, int length);
 int print_octal(va_list args, int flags, int length);
