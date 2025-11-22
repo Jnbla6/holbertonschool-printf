@@ -59,16 +59,18 @@ int flags = 0;
 int length = LENGTH_NONE;
 int field_width = 0;
 int precision = -1;
+int zero_flag = 0;
 
 (*i)++;
 if (!format[*i])
 return (-1);
 
-while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#')
+while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#'|| format[*i] == '0' )
 {
 if (format[*i] == '+') flags |= 1; /* flag for plus case*/
 if (format[*i] == ' ') flags |= 2; /* flag for space case*/
 if (format[*i] == '#') flags |= 4; /* flag for Hash case*/
+ if (format[*i] == '0') zero_flag = 1; /* simple zero flag */
 (*i)++;
 if (!format[*i])
 break;
@@ -162,17 +164,17 @@ count_chars += _putchar(' ');
 return (count_chars);
 } 
  if (format[*i] == 'd' || format[*i] == 'i')
-        return (print_int(cart, flags, length, field_width, precision));
+        return (print_int(cart, flags, length, field_width, precision, zero_flag ));
 if (format[*i] == 'b') 
         return (print_binary(va_arg(cart, unsigned int)));
  if (format[*i] == 'u')
-        return (print_unsigned(cart, flags, length, field_width, precision));
+        return (print_unsigned(cart, flags, length, field_width, precision, zero_flag ));
     if (format[*i] == 'o')
-        return (print_octal(cart, flags ,length, field_width, precision));
+        return (print_octal(cart, flags ,length, field_width, precision,zero_flag ));
     if (format[*i] == 'x')
-        return (print_hex(cart, 0, flags, length, field_width, precision));
+        return (print_hex(cart, 0, flags, length, field_width, precision,zero_flag ));
     if (format[*i] == 'X')
-        return (print_hex(cart, 1, flags, length, field_width, precision));
+        return (print_hex(cart, 1, flags, length, field_width, precision,zero_flag ));
     if (format[*i] == 'S')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
