@@ -86,7 +86,7 @@ int print_number(long n)
  * @zero_flag: whether to use zero padding
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags, int length, int width, int precision, int zero_flag)  /* ADD zero_flag parameter */
+int print_int(va_list args, int flags, int length, int width, int precision, int zero_flag)
 {
 	long n;
 	unsigned long num;
@@ -124,30 +124,50 @@ int print_int(va_list args, int flags, int length, int width, int precision, int
 
 	total_len = len + zeros + (sign ? 1 : 0);
 
-	/* SIMPLE ZERO FLAG: Replace spaces with zeros */
-	while (width > total_len)
+	/* FIX: Handle zero padding correctly */
+	if (zero_flag && precision == -1) /* Zero flag ignored when precision specified */
 	{
-		count += _putchar(zero_flag ? '0' : ' ');  /* ADD zero_flag logic */
-		width--;
+		/* For zero padding: print sign FIRST, then zeros, then number */
+		if (sign == 3) count += _putchar('-');
+		else if (sign == 1) count += _putchar('+');
+		else if (sign == 2) count += _putchar(' ');
+		
+		/* Then zero padding */
+		while (width > total_len)
+		{
+			count += _putchar('0');
+			width--;
+		}
+	}
+	else
+	{
+		/* Regular padding: spaces first, then sign, then number */
+		while (width > total_len)
+		{
+			count += _putchar(' ');
+			width--;
+		}
+		
+		/* Then sign */
+		if (sign == 3) count += _putchar('-');
+		else if (sign == 1) count += _putchar('+');
+		else if (sign == 2) count += _putchar(' ');
 	}
 
-	if (sign == 3) count += _putchar('-');
-	else if (sign == 1) count += _putchar('+');
-	else if (sign == 2) count += _putchar(' ');
-
+	/* Precision zeros */
 	while (zeros > 0)
 	{
 		count += _putchar('0');
 		zeros--;
 	}
 
+	/* Print the number */
 	if (len > 0)
 		count += print_unsigned_number(num);
 
 	return (count);
 }
-
-/**
+ /**
  * print_binary - converts unsigned int to binary
  * @n: number
  * Return: count
