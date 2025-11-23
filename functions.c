@@ -589,3 +589,13 @@ int print_pointer(va_list args, int width)
 	}
 	return (count);
 }
+
+/**
+ * print_rev - prints a string in reverse
+ * @args: argument list
+ * Return: number of characters printed
+ */
+int print_rev(va_list args)
+{
+
+}
