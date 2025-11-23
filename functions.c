@@ -597,5 +597,8 @@ int print_pointer(va_list args, int width)
  */
 int print_rev(va_list args)
 {
-
+	char *s = va_arg(args, char *);
+	int len = 0;
+	int i;
+	int count = 0;
 }
