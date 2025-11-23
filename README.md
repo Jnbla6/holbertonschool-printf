@@ -13,6 +13,7 @@ This implementation replicates the core functionality of the standard `printf`, 
 ```c
 int _printf(const char *format, ...);
 ```
+`_printf` can handle characters, strings, integers, and other formats with various flags and modifiers.
 ```c
 int handle_specifier(const char *format, int *i, va_list args);
 ```
