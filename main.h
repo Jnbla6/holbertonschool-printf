@@ -24,6 +24,7 @@ int print_pointer(va_list args, int width);
 /* Helpers */
 int _putchar(char c);
 int print_number(long n);
+int print_rev(va_list args);
 
 /*buffer handel*/
 void flush(void);

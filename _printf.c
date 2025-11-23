@@ -180,6 +180,8 @@ if (format[*i] == 'b')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
     return (print_pointer(cart, field_width));
+    if (format[*i] == 'r')
+    return (print_rev(cart));
 
 if (flags & 1)
 count_chars += _putchar('+');
