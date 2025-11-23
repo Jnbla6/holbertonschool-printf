@@ -40,8 +40,8 @@ for (i = 0; format[i]; i++) /* loop to take each index*/
     count += _putchar(format[i]);  /* print any thing*/
 }
 flush();  /* clears buffer*/
-va_end(cart);
-return (count);
+va_end(cart);  /* ending he list as best practice*/
+return (count);  /* return with a count of chars*/
 }
 /**
  * handle_specifier - handles format specifiers
@@ -154,6 +154,9 @@ if ((flags & 1) && (flags & 2)) /* if plus flag and space flag combine*/
 flags &= ~2;  /* and this for remove space flag */
 }
 
+/* here conditions to handle any specify*/
+
+
 if (format[*i] == 'c')
 {
 c = va_arg(cart, int);
@@ -214,7 +217,7 @@ count_chars += _putchar(' ');
 if (flags & 4)
 count_chars += _putchar('#');
 
-count_chars += _putchar('%'); /* حل المشاكل*/
+count_chars += _putchar('%'); /* if theres not any condition true print %*/
 count_chars += _putchar(format[*i]);
 return (count_chars);
 }
