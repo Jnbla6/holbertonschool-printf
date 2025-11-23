@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 int _printf(const char *format, ...);
 
@@ -19,7 +20,7 @@ int print_unsigned_number(unsigned long n);
 int print_octal_number(unsigned long n);
 int print_hex_number(unsigned long n, int uppercase);
 int print_string_escaped(va_list args);
-int print_pointer(va_list args, int width);
+int print_pointer(va_list args, int width, int left_justify);
 
 /* Helpers */
 int _putchar(char c);

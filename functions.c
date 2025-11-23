@@ -27,15 +27,10 @@ int print_string(char *s, int width, int precision, int left_justify)
 
 	padding = width - len;
 
-	/* LEFT JUSTIFICATION: content first, then padding */
 	if (left_justify)
 	{
-		/* Print content first */
 		for (i = 0; i < len; i++)
-		{
 			count += _putchar(s[i]);
-		}
-		/* Then padding */
 		while (padding > 0)
 		{
 			count += _putchar(' ');
@@ -44,17 +39,13 @@ int print_string(char *s, int width, int precision, int left_justify)
 	}
 	else
 	{
-		/* RIGHT JUSTIFICATION: padding first, then content */
 		while (padding > 0)
 		{
 			count += _putchar(' ');
 			padding--;
 		}
-		/* Then content */
 		for (i = 0; i < len; i++)
-		{
 			count += _putchar(s[i]);
-		}
 	}
 	return (count);
 }
@@ -117,6 +108,7 @@ int print_int(va_list args, int flags, int length, int width, int precision, int
 	int sign = 0; /* 0: none, 1: +, 2: space, 3: - */
 	unsigned long temp;
 	int padding;
+	int zero_pad = 0;
 
 	if (length == LENGTH_L) n = va_arg(args, long);
 	else if (length == LENGTH_H) n = (short)va_arg(args, int);
@@ -135,7 +127,7 @@ int print_int(va_list args, int flags, int length, int width, int precision, int
 	}
 
 	if (num == 0 && precision == 0)
-		len = 0; /* Special case: print nothing */
+		len = 0;
 	else
 	{
 		temp = num;
@@ -146,61 +138,49 @@ int print_int(va_list args, int flags, int length, int width, int precision, int
 	if (precision > len)
 		zeros = precision - len;
 
+	/* Zero flag is ignored if - flag is present or precision is specified */
+	if ((flags & 8) && !left_justify && precision == -1)
+		zero_pad = 1;
+
 	total_len = len + zeros + (sign ? 1 : 0);
 	padding = width - total_len;
 
-	/* LEFT JUSTIFICATION: content first, then padding */
 	if (left_justify)
 	{
-		/* Print sign */
 		if (sign == 3) count += _putchar('-');
 		else if (sign == 1) count += _putchar('+');
 		else if (sign == 2) count += _putchar(' ');
 
-		/* Precision zeros */
-		while (zeros > 0)
-		{
-			count += _putchar('0');
-			zeros--;
-		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_unsigned_number(num);
-
-		/* Padding at the end */
-		while (padding > 0)
-		{
-			count += _putchar(' ');
-			padding--;
-		}
+		while (zeros > 0) { count += _putchar('0'); zeros--; }
+		if (len > 0) count += print_unsigned_number(num);
+		while (padding > 0) { count += _putchar(' '); padding--; }
 	}
 	else
 	{
-		/* RIGHT JUSTIFICATION: padding first, then content */
-		while (padding > 0)
+		if (zero_pad)
 		{
-			count += _putchar(' ');
-			padding--;
+			/* Sign before zero padding */
+			if (sign == 3) count += _putchar('-');
+			else if (sign == 1) count += _putchar('+');
+			else if (sign == 2) count += _putchar(' ');
+			
+			while (padding > 0) { count += _putchar('0'); padding--; }
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_unsigned_number(num);
 		}
-		
-		/* Then sign */
-		if (sign == 3) count += _putchar('-');
-		else if (sign == 1) count += _putchar('+');
-		else if (sign == 2) count += _putchar(' ');
-
-		/* Precision zeros */
-		while (zeros > 0)
+		else
 		{
-			count += _putchar('0');
-			zeros--;
+			/* Spaces before sign */
+			while (padding > 0) { count += _putchar(' '); padding--; }
+			
+			if (sign == 3) count += _putchar('-');
+			else if (sign == 1) count += _putchar('+');
+			else if (sign == 2) count += _putchar(' ');
+			
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_unsigned_number(num);
 		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_unsigned_number(num);
 	}
-
 	return (count);
 }
 
@@ -234,12 +214,11 @@ int print_unsigned(va_list args, int flags, int length, int width, int precision
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len;
 	int padding;
+	int zero_pad = 0;
 
 	if (length == LENGTH_L) n = va_arg(args, unsigned long);
 	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
 	else n = va_arg(args, unsigned int);
-
-	(void)flags;
 
 	if (n == 0 && precision == 0) len = 0;
 	else
@@ -250,49 +229,33 @@ int print_unsigned(va_list args, int flags, int length, int width, int precision
 	}
 
 	if (precision > len) zeros = precision - len;
+	
+	if ((flags & 8) && !left_justify && precision == -1)
+		zero_pad = 1;
+
 	total_len = len + zeros;
 	padding = width - total_len;
 
-	/* LEFT JUSTIFICATION: content first, then padding */
 	if (left_justify)
 	{
-		/* Precision zeros */
-		while (zeros > 0)
-		{
-			count += _putchar('0');
-			zeros--;
-		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_unsigned_number(n);
-
-		/* Padding at the end */
-		while (padding > 0)
-		{
-			count += _putchar(' ');
-			padding--;
-		}
+		while (zeros > 0) { count += _putchar('0'); zeros--; }
+		if (len > 0) count += print_unsigned_number(n);
+		while (padding > 0) { count += _putchar(' '); padding--; }
 	}
 	else
 	{
-		/* RIGHT JUSTIFICATION: padding first, then content */
-		while (padding > 0)
+		if (zero_pad)
 		{
-			count += _putchar(' ');
-			padding--;
+			while (padding > 0) { count += _putchar('0'); padding--; }
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_unsigned_number(n);
 		}
-
-		/* Precision zeros */
-		while (zeros > 0)
+		else
 		{
-			count += _putchar('0');
-			zeros--;
+			while (padding > 0) { count += _putchar(' '); padding--; }
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_unsigned_number(n);
 		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_unsigned_number(n);
 	}
 	return (count);
 }
@@ -305,6 +268,7 @@ int print_octal(va_list args, int flags, int length, int width, int precision, i
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
 	int padding;
+	int zero_pad = 0;
 
 	if (length == LENGTH_L) n = va_arg(args, unsigned long);
 	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
@@ -321,56 +285,34 @@ int print_octal(va_list args, int flags, int length, int width, int precision, i
 	}
 
 	if (precision > len) zeros = precision - len;
-	
-	/* # flag for octal guarantees a leading zero. 
-	 * If precision already added zeros, we don't add another one.
-	 * If prefix needed and no zeros added by precision, we add 1 to length (or zeros)
-	 */
 	if (prefix && zeros == 0) zeros = 1;
+
+	if ((flags & 8) && !left_justify && precision == -1)
+		zero_pad = 1;
 
 	total_len = len + zeros;
 	padding = width - total_len;
 
-	/* LEFT JUSTIFICATION: content first, then padding */
 	if (left_justify)
 	{
-		/* Precision zeros */
-		while (zeros > 0)
-		{
-			count += _putchar('0');
-			zeros--;
-		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_octal_number(n);
-
-		/* Padding at the end */
-		while (padding > 0)
-		{
-			count += _putchar(' ');
-			padding--;
-		}
+		while (zeros > 0) { count += _putchar('0'); zeros--; }
+		if (len > 0) count += print_octal_number(n);
+		while (padding > 0) { count += _putchar(' '); padding--; }
 	}
 	else
 	{
-		/* RIGHT JUSTIFICATION: padding first, then content */
-		while (padding > 0)
+		if (zero_pad)
 		{
-			count += _putchar(' ');
-			padding--;
+			while (padding > 0) { count += _putchar('0'); padding--; }
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_octal_number(n);
 		}
-
-		/* Precision zeros */
-		while (zeros > 0)
+		else
 		{
-			count += _putchar('0');
-			zeros--;
+			while (padding > 0) { count += _putchar(' '); padding--; }
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_octal_number(n);
 		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_octal_number(n);
 	}
 	return (count);
 }
@@ -383,6 +325,7 @@ int print_hex(va_list args, int uppercase, int flags, int length, int width, int
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
 	int padding;
+	int zero_pad = 0;
 
 	if (length == LENGTH_L) n = va_arg(args, unsigned long);
 	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
@@ -399,165 +342,115 @@ int print_hex(va_list args, int uppercase, int flags, int length, int width, int
 	}
 
 	if (precision > len) zeros = precision - len;
+	
+	if ((flags & 8) && !left_justify && precision == -1)
+		zero_pad = 1;
+
 	total_len = len + zeros + prefix;
 	padding = width - total_len;
 
-	/* LEFT JUSTIFICATION: content first, then padding */
 	if (left_justify)
 	{
-		/* Prefix */
 		if (prefix)
 		{
 			count += _putchar('0');
 			count += _putchar(uppercase ? 'X' : 'x');
 		}
-
-		/* Precision zeros */
-		while (zeros > 0)
-		{
-			count += _putchar('0');
-			zeros--;
-		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_hex_number(n, uppercase);
-
-		/* Padding at the end */
-		while (padding > 0)
-		{
-			count += _putchar(' ');
-			padding--;
-		}
+		while (zeros > 0) { count += _putchar('0'); zeros--; }
+		if (len > 0) count += print_hex_number(n, uppercase);
+		while (padding > 0) { count += _putchar(' '); padding--; }
 	}
 	else
 	{
-		/* RIGHT JUSTIFICATION: padding first, then content */
-		while (padding > 0)
+		if (zero_pad)
 		{
-			count += _putchar(' ');
-			padding--;
+			/* Prefix comes before zero padding */
+			if (prefix)
+			{
+				count += _putchar('0');
+				count += _putchar(uppercase ? 'X' : 'x');
+			}
+			while (padding > 0) { count += _putchar('0'); padding--; }
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_hex_number(n, uppercase);
 		}
-
-		/* Prefix */
-		if (prefix)
+		else
 		{
-			count += _putchar('0');
-			count += _putchar(uppercase ? 'X' : 'x');
+			while (padding > 0) { count += _putchar(' '); padding--; }
+			if (prefix)
+			{
+				count += _putchar('0');
+				count += _putchar(uppercase ? 'X' : 'x');
+			}
+			while (zeros > 0) { count += _putchar('0'); zeros--; }
+			if (len > 0) count += print_hex_number(n, uppercase);
 		}
-
-		/* Precision zeros */
-		while (zeros > 0)
-		{
-			count += _putchar('0');
-			zeros--;
-		}
-
-		/* Print the number */
-		if (len > 0)
-			count += print_hex_number(n, uppercase);
 	}
 	return (count);
 }
 
-/**
- * print_unsigned_number - prints unsigned long
- */
+/* ... print_unsigned_number, print_octal_number, print_hex_number, print_string_escaped ... */
+/* (These functions remain unchanged, included for compilation context if needed) */
 int print_unsigned_number(unsigned long n)
 {
 	int count = 0;
 	char buffer[21];
 	int i = 0;
-
 	if (n == 0) return _putchar('0');
-
-	while (n > 0)
-	{
-		buffer[i++] = (n % 10) + '0';
-		n /= 10;
-	}
+	while (n > 0) { buffer[i++] = (n % 10) + '0'; n /= 10; }
 	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
-
-/**
- * print_octal_number - prints octal
- */
 int print_octal_number(unsigned long n)
 {
 	int count = 0;
 	char buffer[23];
 	int i = 0;
-
 	if (n == 0) return _putchar('0');
-
-	while (n > 0)
-	{
-		buffer[i++] = (n % 8) + '0';
-		n /= 8;
-	}
+	while (n > 0) { buffer[i++] = (n % 8) + '0'; n /= 8; }
 	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
-
-/**
- * print_hex_number - prints hex
- */
 int print_hex_number(unsigned long n, int uppercase)
 {
 	int count = 0;
 	char buffer[17];
 	int i = 0;
 	char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
-
 	if (n == 0) return _putchar('0');
-
-	while (n > 0)
-	{
-		buffer[i++] = digits[n % 16];
-		n /= 16;
-	}
+	while (n > 0) { buffer[i++] = digits[n % 16]; n /= 16; }
 	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
-
-/**
- * print_string_escaped - prints escaped string
- */
 int print_string_escaped(va_list args)
 {
 	char *s = va_arg(args, char *);
 	int count = 0, i;
 	char hex_digits[] = "0123456789ABCDEF";
-
 	if (!s) s = "(null)";
-
-	for (i = 0; s[i]; i++)
-	{
-		if ((s[i] > 0 && s[i] < 32) || s[i] >= 127)
-		{
-			count += _putchar('\\');
-			count += _putchar('x');
+	for (i = 0; s[i]; i++) {
+		if ((s[i] > 0 && s[i] < 32) || s[i] >= 127) {
+			count += _putchar('\\'); count += _putchar('x');
 			count += _putchar(hex_digits[(unsigned char)s[i] / 16]);
 			count += _putchar(hex_digits[(unsigned char)s[i] % 16]);
-		}
-		else count += _putchar(s[i]);
+		} else count += _putchar(s[i]);
 	}
-	return (count);
+	return count;
 }
 
 /**
  * print_pointer - prints pointer
  */
-int print_pointer(va_list args, int width)
+int print_pointer(va_list args, int width, int left_justify)
 {
 	void *ptr = va_arg(args, void *);
 	unsigned long address;
 	char buffer[20];
 	int i = 0, count = 0, len = 2; /* 0x */
 	char hex_digits[] = "0123456789abcdef";
+	int padding;
 
-	if (ptr == NULL) return print_string("(nil)", width, -1, 0);
+	if (ptr == NULL) return print_string("(nil)", width, -1, left_justify);
 
 	address = (unsigned long)ptr;
 	
@@ -568,81 +461,73 @@ int print_pointer(va_list args, int width)
 		while (temp > 0) { temp /= 16; len++; }
 	}
 
-	while (width > len)
+	padding = width - len;
+
+	if (left_justify)
 	{
-		count += _putchar(' ');
-		width--;
+		count += _putchar('0');
+		count += _putchar('x');
+		if (address == 0) count += _putchar('0');
+		else
+		{
+			while (address > 0)
+			{
+				buffer[i++] = hex_digits[address % 16];
+				address /= 16;
+			}
+			while (i > 0) count += _putchar(buffer[--i]);
+		}
+		while (padding > 0)
+		{
+			count += _putchar(' ');
+			padding--;
+		}
 	}
-
-	count += _putchar('0');
-	count += _putchar('x');
-
-	if (address == 0) count += _putchar('0');
 	else
 	{
-		while (address > 0)
+		while (padding > 0)
 		{
-			buffer[i++] = hex_digits[address % 16];
-			address /= 16;
+			count += _putchar(' ');
+			padding--;
 		}
-		while (i > 0) count += _putchar(buffer[--i]);
+		count += _putchar('0');
+		count += _putchar('x');
+		if (address == 0) count += _putchar('0');
+		else
+		{
+			while (address > 0)
+			{
+				buffer[i++] = hex_digits[address % 16];
+				address /= 16;
+			}
+			while (i > 0) count += _putchar(buffer[--i]);
+		}
 	}
 	return (count);
 }
 
-/**
- * print_rev - prints a string in reverse
- * @args: argument list
- * Return: number of characters printed
- */
+/* print_rev and print_rot13 included here as they are part of main.h */
 int print_rev(va_list args)
 {
 	char *s = va_arg(args, char *);
-	int len = 0;
-	int i;
-	int count = 0;
-
-	if (!s)
-		s = "(null)";
-
-	while (s[len])
-		len++;
-
-	for (i = len - 1; i >= 0; i--)
-	{
-		count += _putchar(s[i]);
-	}
-	return (count);
+	int len = 0, i, count = 0;
+	if (!s) s = "(null)";
+	while (s[len]) len++;
+	for (i = len - 1; i >= 0; i--) count += _putchar(s[i]);
+	return count;
 }
-
-/**
- * print_rot13 - prints the rot13'ed string
- * @args: arguments
- * Return: count of characters printed
- */
 int print_rot13(va_list args)
 {
 	char *s = va_arg(args, char *);
-	int i, j;
-	int count = 0;
+	int i, j, count = 0;
 	char *a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	char *b = "nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM";
-
-	if (!s)
-		s = "(null)";
-
-	for (i = 0; s[i]; i++)
-	{
-		for (j = 0; a[j]; j++)
-		{
-			if (s[i] == a[j])
-			{
-				count += _putchar(b[j]);
-				break;
-			}
+	if (!s) s = "(null)";
+	for (i = 0; s[i]; i++) {
+		for (j = 0; a[j]; j++) {
+			if (s[i] == a[j]) { count += _putchar(b[j]); break; }
 		}
-		if (!a[j])
-			count += _putchar(s[i]);
+		if (!a[j]) count += _putchar(s[i]);
 	}
-	return (count);
+	return count;
 }

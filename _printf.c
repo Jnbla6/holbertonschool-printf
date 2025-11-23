@@ -66,31 +66,37 @@ if (!format[*i])
 return (-1);
 
 /* ADD '-' TO FLAG DETECTION */
-while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#' || format[*i] == '-')
+while (format[*i] == '+' || format[*i] == ' ' || format[*i] == '#' || format[*i] == '-' || format[*i] == '0')
 {
 if (format[*i] == '+') flags |= 1; /* flag for plus case*/
 if (format[*i] == ' ') flags |= 2; /* flag for space case*/
 if (format[*i] == '#') flags |= 4; /* flag for Hash case*/
+if (format[*i] == '0') flags |= 8;
 if (format[*i] == '-') left_justify = 1;  /* ADD THIS LINE */
 (*i)++;
 if (!format[*i])
 break;
 } 
- /* Parse field width */
+/* Parse field width */
 if (format[*i] == '*')
 {
 field_width = va_arg(cart, int);
+if (field_width < 0)
+{
+field_width = -field_width;
+left_justify = 1;
+}
 (*i)++;
 }
 else
 {
-    while (format[*i] >= '0' && format[*i] <= '9')
-    {
-        field_width = field_width * 10 + (format[*i] - '0');
-        (*i)++;
-        if (!format[*i])
-            break;
-    }
+while (format[*i] >= '0' && format[*i] <= '9')
+{
+field_width = field_width * 10 + (format[*i] - '0');
+(*i)++;
+if (!format[*i])
+break;
+}
 }
 
 if (format[*i] == '.')
@@ -124,6 +130,8 @@ if (format[*i] == 'l' || format[*i] == 'h')
         if (flags & 1) count_chars += _putchar('+');
         if (flags & 2) count_chars += _putchar(' ');
         if (flags & 4) count_chars += _putchar('#');
+        if (flags & 8) count_chars += _putchar('0');
+		if (left_justify) count_chars += _putchar('-');
         return count_chars;
     }
 }
@@ -134,6 +142,8 @@ if (!format[*i] && flags)
     if (flags & 1) count_chars += _putchar('+');
     if (flags & 2) count_chars += _putchar(' ');
     if (flags & 4) count_chars += _putchar('#');
+    if (flags & 8) count_chars += _putchar('0');
+	if (left_justify) count_chars += _putchar('-');
     (*i)--;
     return count_chars;
 }
@@ -147,12 +157,24 @@ flags &= ~2;  /* and this for remove space flag */
 if (format[*i] == 'c')
 {
 c = va_arg(cart, int);
+if (left_justify)
+{
+count_chars += _putchar(c);
+while (field_width > 1)
+{
+count_chars += _putchar(' ');
+field_width--;
+}
+}
+else
+{
 while (field_width > 1)
 {
 count_chars += _putchar(' ');
 field_width--;
 }
 count_chars += _putchar(c);
+}
 return (count_chars);
 }
 if (format[*i] == 's')
@@ -179,7 +201,7 @@ if (format[*i] == 'b')
     if (format[*i] == 'S')
     return (print_string_escaped(cart));
     if (format[*i] == 'p')
-    return (print_pointer(cart, field_width));
+    return (print_pointer(cart, field_width, left_justify));
     if (format[*i] == 'r')
     return (print_rev(cart));
     if (format[*i] == 'R')
