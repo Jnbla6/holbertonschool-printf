@@ -71,7 +71,7 @@ The function processes the format string and handles the following conversion sp
 | `functions.c` | Contains helper functions: `_putchar` (writes char to stdout), `print_string` (writes strings), `print_int` (handles %d/%i), and `print_number` (recursive integer printing). |
 | `buffer_functions.c` | temporarily stores output data in memory before sending it to the final destination. |
 | `main.h` | Header file containing function prototypes and standard library includes (`<stdarg.h>`, `<unistd.h>`, `<string.h>`). |
-| `man_3_printf` | Custom manual page documenting the function's usage, synopsis, and examples. |
+| `man_3_printf` | Custom manual page documenting the function's usage, synopsis, and examples, etc. |
 
 
 ## 👥 Authors
