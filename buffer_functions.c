@@ -1,9 +1,11 @@
 #include "main.h"
 #include <unistd.h>
 
-#define BUF 1024
-static char buffer[BUF];
-static int buf_index = 0;
+/* here the functions for buffer system*/
+
+#define BUF 1024 /* the BUF size*/
+static char buffer[BUF]; /*array with BUF size*/
+static int buf_index = 0; /*buf index to know how muc the memory is taken*/
 
 
 /**
@@ -11,7 +13,7 @@ static int buf_index = 0;
  */
 void flush(void)
 {
-if (buf_index > 0)
+if (buf_index > 0) /*if index is upper than 0 write any thing and make it 0*/
 {
 write(1, buffer, buf_index);
 buf_index = 0;
