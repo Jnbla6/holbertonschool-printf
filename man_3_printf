@@ -1,6 +1,6 @@
 .TH _PRINTF 3 "November 2025" "Custom printf Project"
 .SH NAME
-_printf \- custom formatted output function with buffer optimization
+_printf \- custom formatted output function
 
 .SH SYNOPSIS
 .B #include "main.h"
@@ -11,17 +11,17 @@ _printf \- custom formatted output function with buffer optimization
 The
 .B _printf()
 function writes formatted output to stdout according to a format string that specifies how subsequent arguments are converted for output.
-This custom implementation supports multiple conversion specifiers, flags, and buffer optimization for efficient output.
+This custom implementation supports multiple conversion specifiers, flags, for efficient output.
 
 .PP
-The format string may contain ordinary characters (printed directly) and conversion specifiers, which are introduced by '%'. Supported flags include '+', ' ', and '#' applied to specific conversions.
+The format string may contain ordinary characters (printed directly) and conversion specifiers, which are introduced by '%'.
 
 .SH PROJECT FUNCTIONS
-This section details every function implemented in the project, describing their specific roles, logic, and interaction with the buffer system.
+This section details every function implemented in the project, describing their specific roles, and logic.
 
 .TP
 .B int _printf(const char *format, ...)
-This is the central entry point of the custom printing system. It initializes the variable argument list and iterates through the input format string character by character. When it encounters a percentage sign, it pauses standard printing to invoke the `handle_specifier` function; otherwise, it passes characters directly to the buffer. The function is responsible for the overall flow control, ensuring that the buffer is flushed at the end of execution and returning the accurate total count of characters printed to the standard output.
+This is the central entry point of the custom printing system. It initializes the variable argument list and iterates through the input format string character by character. When it encounters a percentage sign, it pauses standard printing to invoke the `handle_specifier` function; otherwise, it passes characters directly. The function is responsible for the overall flow control, and returning the accurate total count of characters printed to the standard output.
 
 .TP
 .B int handle_specifier(const char *format, int *i, va_list cart)
