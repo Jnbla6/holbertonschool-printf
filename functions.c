@@ -627,4 +627,8 @@ int print_rot13(va_list args)
 	int count = 0;
 	char *a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	char *b = "nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM";
+
+	if (!s)
+		s = "(null)";
+
 }
