@@ -605,4 +605,12 @@ int print_rev(va_list args)
 	if (!s)
 		s = "(null)";
 
+	while (s[len])
+		len++;
+
+	for (i = len - 1; i >= 0; i--)
+	{
+		count += _putchar(s[i]);
+	}
+	return (count);
 }
