@@ -622,5 +622,9 @@ int print_rev(va_list args)
  */
 int print_rot13(va_list args)
 {
-
+	char *s = va_arg(args, char *);
+	int i, j;
+	int count = 0;
+	char *a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char *b = "nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM";
 }
