@@ -13,7 +13,9 @@ This implementation replicates the core functionality of the standard `printf`, 
 ```c
 int _printf(const char *format, ...);
 ```
-
+```c
+int handle_specifier(const char *format, int *i, va_list args);
+```
 ### Return Value
 
   * **Success:** Returns the number of characters printed (excluding the null byte used to end output to strings).
