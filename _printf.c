@@ -182,6 +182,8 @@ if (format[*i] == 'b')
     return (print_pointer(cart, field_width));
     if (format[*i] == 'r')
     return (print_rev(cart));
+    if (format[*i] == 'R')
+    return (print_rot13(cart));
 
 if (flags & 1)
 count_chars += _putchar('+');
