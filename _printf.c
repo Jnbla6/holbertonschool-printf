@@ -28,18 +28,18 @@ va_start(cart, format); /* start list*/
 
 for (i = 0; format[i]; i++) /* loop to take each index*/
 {
-    if (format[i] == '%')
+    if (format[i] == '%') /* when the loop arive to % start handle_specifier function*/
     {
     count += handle_specifier(format, &i, cart);
     continue;
     }
 
-    if (i > 0 && format[i] == ' ' && format[i - 1] == '%')
+    if (i > 0 && format[i] == ' ' && format[i - 1] == '%')   /* if after the % a space or % countinue means print space*/
     continue;
 
-    count += _putchar(format[i]);
+    count += _putchar(format[i]);  /* print any thing*/
 }
-flush();
+flush();  /* clears buffer*/
 va_end(cart);
 return (count);
 }
