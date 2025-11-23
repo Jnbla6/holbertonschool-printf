@@ -16,6 +16,8 @@ int _printf(const char *format, ...);
 ```c
 int handle_specifier(const char *format, int *i, va_list args);
 ```
+`handle_specifier()` is the core parser function used in a custom `_printf` implementation.  
+It interprets format specifiers, flags, field widths, precision, and length modifiers, and dispatches printing to the correct helper function.
 ### Return Value
 
   * **Success:** Returns the number of characters printed (excluding the null byte used to end output to strings).
