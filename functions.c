@@ -631,4 +631,18 @@ int print_rot13(va_list args)
 	if (!s)
 		s = "(null)";
 
+	for (i = 0; s[i]; i++)
+	{
+		for (j = 0; a[j]; j++)
+		{
+			if (s[i] == a[j])
+			{
+				count += _putchar(b[j]);
+				break;
+			}
+		}
+		if (!a[j])
+			count += _putchar(s[i]);
+	}
+	return (count);
 }
