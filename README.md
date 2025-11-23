@@ -30,6 +30,7 @@ Compile the program using `gcc` with the following flags (as per project require
 ```bash
 gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o printf
 ```
+note! dont forget to add your main file that uses (_printf) function
 
 ### Example Main File
 
