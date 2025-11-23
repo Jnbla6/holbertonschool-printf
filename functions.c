@@ -614,3 +614,13 @@ int print_rev(va_list args)
 	}
 	return (count);
 }
+
+/**
+ * print_rot13 - prints the rot13'ed string
+ * @args: arguments
+ * Return: count of characters printed
+ */
+int print_rot13(va_list args)
+{
+
+}
