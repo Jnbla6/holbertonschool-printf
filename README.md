@@ -13,7 +13,12 @@ This implementation replicates the core functionality of the standard `printf`, 
 ```c
 int _printf(const char *format, ...);
 ```
-
+`_printf` can handle characters, strings, integers, and other formats with various flags and modifiers.
+```c
+int handle_specifier(const char *format, int *i, va_list args);
+```
+`handle_specifier()` is the core parser function used in a custom `_printf` implementation.  
+It interprets format specifiers, flags, field widths, precision, and length modifiers, and dispatches printing to the correct helper function.
 ### Return Value
 
   * **Success:** Returns the number of characters printed (excluding the null byte used to end output to strings).
@@ -64,8 +69,10 @@ The function processes the format string and handles the following conversion sp
 | :--- | :--- |
 | `_printf.c` | Contains the main logic for the `_printf` function, loop for parsing the format string, and specifier selection. |
 | `functions.c` | Contains helper functions: `_putchar` (writes char to stdout), `print_string` (writes strings), `print_int` (handles %d/%i), and `print_number` (recursive integer printing). |
+| `buffer_functions.c` | temporarily stores output data in memory before sending it to the final destination. |
 | `main.h` | Header file containing function prototypes and standard library includes (`<stdarg.h>`, `<unistd.h>`, `<string.h>`). |
-| `man_3_printf` | Custom manual page documenting the function's usage, synopsis, and examples. |
+| `man_3_printf` | Custom manual page documenting the function's usage, synopsis, and examples, etc. |
+
 
 ## 👥 Authors
   * **Badr Alshaya**
