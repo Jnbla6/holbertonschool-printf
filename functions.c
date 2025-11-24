@@ -100,7 +100,7 @@ int print_number(long n)
  * @left_justify: whether to left justify
  * Return: number of characters printed
  */
-int print_int(va_list args, int flags, int length, int width, int precision, int left_justify)
+int print_int(va_list *args, int flags, int length, int width, int precision, int left_justify)
 {
 	long n;
 	unsigned long num;
@@ -110,9 +110,9 @@ int print_int(va_list args, int flags, int length, int width, int precision, int
 	int padding;
 	int zero_pad = 0;
 
-	if (length == LENGTH_L) n = va_arg(args, long);
-	else if (length == LENGTH_H) n = (short)va_arg(args, int);
-	else n = va_arg(args, int);
+	if (length == LENGTH_L) n = va_arg(*args, long);
+	else if (length == LENGTH_H) n = (short)va_arg(*args, int);
+	else n = va_arg(*args, int);
 
 	if (n < 0)
 	{
@@ -209,16 +209,16 @@ int print_binary(unsigned int n)
 /**
  * print_unsigned - prints unsigned int with width/precision
  */
-int print_unsigned(va_list args, int flags, int length, int width, int precision, int left_justify)
+int print_unsigned(va_list *args, int flags, int length, int width, int precision, int left_justify)
 {
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len;
 	int padding;
 	int zero_pad = 0;
 
-	if (length == LENGTH_L) n = va_arg(args, unsigned long);
-	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
-	else n = va_arg(args, unsigned int);
+	if (length == LENGTH_L) n = va_arg(*args, unsigned long);
+	else if (length == LENGTH_H) n = (unsigned short)va_arg(*args, unsigned int);
+	else n = va_arg(*args, unsigned int);
 
 	if (n == 0 && precision == 0) len = 0;
 	else
@@ -263,16 +263,16 @@ int print_unsigned(va_list args, int flags, int length, int width, int precision
 /**
  * print_octal - prints octal with width/precision
  */
-int print_octal(va_list args, int flags, int length, int width, int precision, int left_justify)
+int print_octal(va_list *args, int flags, int length, int width, int precision, int left_justify)
 {
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
 	int padding;
 	int zero_pad = 0;
 
-	if (length == LENGTH_L) n = va_arg(args, unsigned long);
-	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
-	else n = va_arg(args, unsigned int);
+	if (length == LENGTH_L) n = va_arg(*args, unsigned long);
+	else if (length == LENGTH_H) n = (unsigned short)va_arg(*args, unsigned int);
+	else n = va_arg(*args, unsigned int);
 
 	if ((flags & 4) && n != 0) prefix = 1; /* # flag adds 0 */
 
@@ -320,16 +320,16 @@ int print_octal(va_list args, int flags, int length, int width, int precision, i
 /**
  * print_hex - prints hex with width/precision
  */
-int print_hex(va_list args, int uppercase, int flags, int length, int width, int precision, int left_justify)
+int print_hex(va_list *args, int uppercase, int flags, int length, int width, int precision, int left_justify)
 {
 	unsigned long n, temp;
 	int len = 0, zeros = 0, count = 0, total_len, prefix = 0;
 	int padding;
 	int zero_pad = 0;
 
-	if (length == LENGTH_L) n = va_arg(args, unsigned long);
-	else if (length == LENGTH_H) n = (unsigned short)va_arg(args, unsigned int);
-	else n = va_arg(args, unsigned int);
+	if (length == LENGTH_L) n = va_arg(*args, unsigned long);
+	else if (length == LENGTH_H) n = (unsigned short)va_arg(*args, unsigned int);
+	else n = va_arg(*args, unsigned int);
 
 	if ((flags & 4) && n != 0) prefix = 2; /* 0x */
 
@@ -422,9 +422,9 @@ int print_hex_number(unsigned long n, int uppercase)
 	while (i > 0) count += _putchar(buffer[--i]);
 	return count;
 }
-int print_string_escaped(va_list args)
+int print_string_escaped(va_list *args)
 {
-	char *s = va_arg(args, char *);
+	char *s = va_arg(*args, char *);
 	int count = 0, i;
 	char hex_digits[] = "0123456789ABCDEF";
 	if (!s) s = "(null)";
@@ -441,9 +441,9 @@ int print_string_escaped(va_list args)
 /**
  * print_pointer - prints pointer
  */
-int print_pointer(va_list args, int width, int left_justify)
+int print_pointer(va_list *args, int width, int left_justify)
 {
-	void *ptr = va_arg(args, void *);
+	void *ptr = va_arg(*args, void *);
 	unsigned long address;
 	char buffer[20];
 	int i = 0, count = 0, len = 2; /* 0x */
@@ -507,18 +507,18 @@ int print_pointer(va_list args, int width, int left_justify)
 }
 
 /* print_rev and print_rot13 included here as they are part of main.h */
-int print_rev(va_list args)
+int print_rev(va_list *args)
 {
-	char *s = va_arg(args, char *);
+	char *s = va_arg(*args, char *);
 	int len = 0, i, count = 0;
 	if (!s) s = "(null)";
 	while (s[len]) len++;
 	for (i = len - 1; i >= 0; i--) count += _putchar(s[i]);
 	return count;
 }
-int print_rot13(va_list args)
+int print_rot13(va_list *args)
 {
-	char *s = va_arg(args, char *);
+	char *s = va_arg(*args, char *);
 	int i, j, count = 0;
 	char *a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	char *b = "nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM";

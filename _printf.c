@@ -9,7 +9,7 @@
  * @cart: va_list of arguments
  * Return: number of characters printed
  */
-int handle_specifier(const char *format, int *i, va_list cart); /* handle specifier function to handle wih each specify*/
+int handle_specifier(const char *format, int *i, va_list *cart); /* handle specifier function to handle wih each specify*/
 void flush(void); /*flush function to clean buffer*/
 
 int _printf(const char *format, ...)
@@ -30,7 +30,7 @@ for (i = 0; format[i]; i++) /* loop to take each index*/
 {
     if (format[i] == '%') /* when the loop arive to % start handle_specifier function*/
     {
-    count += handle_specifier(format, &i, cart);
+    count += handle_specifier(format, &i, &cart);
     continue;
     }
 
@@ -51,7 +51,7 @@ return (count);  /* return with a count of chars*/
  * Return: number of characters printed for the specifier
  */
 
-int handle_specifier(const char *format, int *i, va_list cart)
+int handle_specifier(const char *format, int *i, va_list *cart)
 {
 char c;
 int count_chars =0;
@@ -80,7 +80,7 @@ break;
 /* Parse field width */
 if (format[*i] == '*')
 {
-field_width = va_arg(cart, int);
+field_width = va_arg(*cart, int);
 if (field_width < 0)
 {
 field_width = -field_width;
@@ -105,7 +105,7 @@ precision = 0;
 (*i)++;
 if (format[*i] == '*')
 {
-precision = va_arg(cart, int);
+precision = va_arg(*cart, int);
 (*i)++;
 }
 else
@@ -159,7 +159,7 @@ flags &= ~2;  /* and this for remove space flag */
 
 if (format[*i] == 'c')
 {
-c = va_arg(cart, int);
+c = va_arg(*cart, int);
 if (left_justify)
 {
 count_chars += _putchar(c);
@@ -181,7 +181,7 @@ count_chars += _putchar(c);
 return (count_chars);
 }
 if (format[*i] == 's')
-return (print_string(va_arg(cart, char*), field_width, precision, left_justify));  /* ADD left_justify */
+return (print_string(va_arg(*cart, char*), field_width, precision, left_justify));  /* ADD left_justify */
 if (format[*i] == '%')
 {
 count_chars += _putchar('%');
@@ -192,7 +192,7 @@ return (count_chars);
 if (format[*i] == 'd' || format[*i] == 'i')
 return (print_int(cart, flags, length, field_width, precision, left_justify));  /* ADD left_justify */
 if (format[*i] == 'b') 
-return (print_binary(va_arg(cart, unsigned int)));
+return (print_binary(va_arg(*cart, unsigned int)));
 if (format[*i] == 'u')
 return (print_unsigned(cart, flags, length, field_width, precision, left_justify));  /* ADD left_justify */
 if (format[*i] == 'o')
